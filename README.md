@@ -1,0 +1,2 @@
+# UMate
+ This is a project that is meant to serve as an academic aid to university students particularly those of BRAC University. It offers features such as Chatting and File sharing among Peers, Taking Notes and Sharing them, Experimental Deeplinks to all academic social medias such as course discord and slack servers, and Lastly Advising Planning which will allow a student to have multiple plans regarding advising plans for lessening the pain that is Pre-Advising.
