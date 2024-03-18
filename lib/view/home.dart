@@ -60,6 +60,7 @@ class HomePage extends StatelessWidget {
                   Expanded(
                     child: ListView(
                       children: [
+                        const SizedBox(height: 15),
                         buildBottomButton('Chat', buttonWidth, bottomButtonsHeight, () {
                           // Navigate to Chat page
                         }),
@@ -110,7 +111,7 @@ class HomePage extends StatelessWidget {
 
   Widget buildBottomButton(String text, double width, double height, Function() onPressed) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+      margin: const EdgeInsets.symmetric(horizontal: 10.0),
       child: Container(
         width: width,
         height: height / 4,
@@ -123,7 +124,7 @@ class HomePage extends StatelessWidget {
           child: Center(
             child: Text(
               text,
-              style: const TextStyle(fontSize: 15),
+              style: const TextStyle(fontSize: 13),
               textAlign: TextAlign.center,
             ),
           ),
