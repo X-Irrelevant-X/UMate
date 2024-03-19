@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:umate/view/login.dart';
+import 'package:umate/view/registration.dart';
 
 class SideBar extends StatelessWidget {
-  const SideBar({super.key});
+  const SideBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,22 +21,45 @@ class SideBar extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Top row
-          SizedBox(
-            height: profileButtonHeight,
-            child: Center(
-              child: TextButton(
-                onPressed: () {
-                  // Navigate to profile page
-                },
-                child: const Text(
+          // Profile button with popup menu
+          PopupMenuButton(
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LogIn()),
+                      );
+                    },
+                    child: Text('Log In'),
+                  ),
+                ),
+                PopupMenuItem(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Registration()),
+                      );
+                    },
+                    child: Text('Sign Up'),
+                  ),
+                ),
+              ];
+            },
+            child: SizedBox(
+              height: profileButtonHeight,
+              child: Center(
+                child: Text(
                   'Profile',
                   style: TextStyle(fontSize: 20),
                 ),
               ),
             ),
           ),
-          // Divider between top and bottom rows
+          // Divider between profile button and bottom buttons
           Container(
             height: 1.5,
             color: const Color.fromARGB(255, 66, 66, 66),
