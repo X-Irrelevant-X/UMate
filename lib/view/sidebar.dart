@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:umate/view/advising.dart';
 import 'package:umate/view/login.dart';
 import 'package:umate/view/registration.dart';
 import 'package:umate/view/friends.dart';
 import 'package:umate/view/notes.dart';
+//import 'package:umate/view/advising.dart';
+
 
 class SideBar extends StatelessWidget {
   const SideBar({super.key});
@@ -101,11 +104,14 @@ class SideBar extends StatelessWidget {
                 buildBottomButton('Notes', buttonWidth, bottomButtonsHeight, () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const Notes()),
+                    MaterialPageRoute(builder: (context) => Notes()),
                   );
                 }),
                 buildBottomButton('Advising Planning', buttonWidth, bottomButtonsHeight, () {
-                  // Navigate to Advising Planning page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AdvisingPlanning()),
+                  );
                 }),
               ],
             ),

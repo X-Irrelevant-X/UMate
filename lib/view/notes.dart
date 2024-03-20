@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:umate/view/sidebar.dart';
+import 'package:umate/view/home.dart';
 
 class Notes extends StatelessWidget {
   final List<Map<String, String>> notes = [
@@ -8,7 +9,7 @@ class Notes extends StatelessWidget {
     {'title': 'Note 3', 'body': 'This is the body of note 3', 'date': '2024-03-22'},
   ];
 
-  const Notes({super.key});
+  Notes({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +22,12 @@ class Notes extends StatelessWidget {
           ),
           centerTitle: true,
           backgroundColor: const Color.fromARGB(255, 185, 205, 205),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
         body: Row(
           children: [
