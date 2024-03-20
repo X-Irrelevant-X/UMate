@@ -18,7 +18,7 @@ class HomePage extends StatelessWidget {
             style: TextStyle(fontSize: 30),
           ),
           centerTitle: true,
-          backgroundColor: Colors.green[500], // Medium green
+          backgroundColor:  const Color.fromARGB(255, 185, 205, 205),
         ),
         body: Row(
           children: [

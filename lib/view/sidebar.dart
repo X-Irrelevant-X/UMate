@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:umate/view/login.dart';
 import 'package:umate/view/registration.dart';
+import 'package:umate/view/friends.dart';
 
 class SideBar extends StatelessWidget {
-  const SideBar({Key? key}) : super(key: key);
+  const SideBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,6 @@ class SideBar extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Profile button with popup menu
           PopupMenuButton(
             itemBuilder: (BuildContext context) {
               return [
@@ -33,7 +33,7 @@ class SideBar extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => const LogIn()),
                       );
                     },
-                    child: Text('Log In'),
+                    child: const Text('Log In'),
                   ),
                 ),
                 PopupMenuItem(
@@ -44,14 +44,14 @@ class SideBar extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => const Registration()),
                       );
                     },
-                    child: Text('Sign Up'),
+                    child: const Text('Sign Up'),
                   ),
                 ),
               ];
             },
             child: SizedBox(
               height: profileButtonHeight,
-              child: Center(
+              child: const Center(
                 child: Text(
                   'Profile',
                   style: TextStyle(fontSize: 20),
@@ -70,10 +70,32 @@ class SideBar extends StatelessWidget {
               children: [
                 const SizedBox(height: 20),
                 buildBottomButton('Chat', buttonWidth, bottomButtonsHeight, () {
-                  // Navigate to Chat page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Friends()),
+                  );
                 }),
                 buildBottomButton('Social Medias', buttonWidth, bottomButtonsHeight, () {
-                  // Navigate to Social Medias page
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Dialog(
+                        child: SizedBox(
+                          width: 400,
+                          height: 400,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                socialRow(['CSE489', 'CSE470', 'CSE422']),
+                                socialRow(['470 FB', '489 FB', '422 FB']),
+                                socialRow(['422Drive', '489Drive', '470Drive']),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
                 }),
                 buildBottomButton('Notes', buttonWidth, bottomButtonsHeight, () {
                   // Navigate to Notes page
@@ -88,6 +110,41 @@ class SideBar extends StatelessWidget {
       ),
     );
   }
+
+  Widget socialRow(List<String> buttonNames) {
+     return Padding(
+      padding: const EdgeInsets.only(top: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: buttonNames.map((buttonName) {
+          return socialButton(buttonName);
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget socialButton(String text) {
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: ElevatedButton(
+        onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+        child: SizedBox(
+          width: 33,
+          height: 90,
+          child: Center(
+            child: Text(text),
+          ),
+        ),
+      ),
+    );
+  }
+
 
   Widget buildBottomButton(String text, double width, double height, Function() onPressed) {
     return Container(
