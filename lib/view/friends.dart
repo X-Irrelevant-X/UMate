@@ -38,7 +38,7 @@ class Friends extends StatelessWidget {
                           margin: const EdgeInsets.only(bottom: 5), 
                           decoration: const BoxDecoration(
                             border: Border(
-                              top: BorderSide(color: Colors.black, width: 1),
+                              top: BorderSide(color: Color.fromARGB(255, 113, 113, 113), width: 1),
                               bottom: BorderSide(color: Colors.black, width: 1),
                             ),
                           ),

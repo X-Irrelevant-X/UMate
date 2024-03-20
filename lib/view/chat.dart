@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:umate/view/sidebar.dart'; // Import your sidebar file
+import 'package:umate/view/sidebar.dart';
 
 class ChatPage extends StatelessWidget {
   final String friendName;
@@ -20,7 +20,7 @@ class ChatPage extends StatelessWidget {
       body: Row(
         children: [
           // Left column
-          const SideBar(), // Assuming this is your sidebar widget
+          const SideBar(),
 
           // Right column
           Expanded(
