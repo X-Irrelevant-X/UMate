@@ -41,6 +41,8 @@ class ProfileState extends State<ProfilePage> {
                     backgroundImage: AssetImage('assets/profile_pic.png'),
                   ),
                   const SizedBox(height: 50),
+                  passField('Username', 'Username', fontSize: 20.0),
+                  const SizedBox(height: 20),
                   normalField('Name', name, fontSize: 20.0),
                   const SizedBox(height: 20),
                   normalField('Email', email, fontSize: 20.0),

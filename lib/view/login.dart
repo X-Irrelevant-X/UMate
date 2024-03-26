@@ -126,7 +126,7 @@ class LogIn extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const Registration()),
+                        MaterialPageRoute(builder: (context) => Registration()),
                       );
                     },
                     child: const Text(
