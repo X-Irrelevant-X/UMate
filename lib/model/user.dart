@@ -1,7 +1,9 @@
+//@request.auth.id;
 import 'dart:io';
 
 class User {
-  File? profilePicture;
+  String? id;
+  File? avatar;
   String? name;
   String username;
   String email;
@@ -9,7 +11,8 @@ class User {
   String passwordConfirm;
 
   User({
-    this.profilePicture,
+    this.id,
+    this.avatar,
     this.name,
     required this.username,
     required this.email,
@@ -19,6 +22,8 @@ class User {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
+      'avatar': avatar,
       'username': username,
       'name': name,
       'email': email,
@@ -29,11 +34,13 @@ class User {
 
   static User fromJson(Map<String, dynamic> json) {
     return User(
-      username: json['username'],
-      name: json['name'],
-      email: json['email'],
-      password: json['password'],
-      passwordConfirm: json['passwordConfirm'],
+      id: json['id'] ?? '',
+      avatar: json['avatar'] ?? '',
+      username: json['username'] ?? '',
+      name: json['name'] ?? '',
+      email: json['email'] ?? '',
+      password: json['password'] ?? '',
+      passwordConfirm: json['passwordConfirm'] ?? '',
     );
   }
 }

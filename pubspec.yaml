@@ -11,6 +11,9 @@ dependencies:
     sdk: flutter
   mvc_pattern: ^8.12.0
   pocketbase: ^0.18.1
+  shared_preferences: any
+  image_picker: any
+  universal_html: any
 
 dev_dependencies:
   flutter_test:

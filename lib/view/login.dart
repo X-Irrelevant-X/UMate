@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:umate/controller/login_c.dart';
 import 'package:umate/view/registration.dart';
-import 'package:umate/view/profile.dart';
 
 class LogIn extends StatelessWidget {
-  const LogIn({super.key});
+  final LoginController _controller = LoginController();
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController emailController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -51,6 +54,7 @@ class LogIn extends StatelessWidget {
                         ),
                         const SizedBox(height: 10),
                         TextFormField(
+                          controller: emailController,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.all(10.0),
@@ -64,6 +68,7 @@ class LogIn extends StatelessWidget {
                         ),
                         const SizedBox(height: 10),
                         TextFormField(
+                          controller: passwordController,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.all(10.0),
@@ -76,10 +81,7 @@ class LogIn extends StatelessWidget {
                   const SizedBox(height: 50),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const ProfilePage()),
-                      );
+                      _controller.login(context, emailController.text, passwordController.text);
                     },
                     child: const Text(
                       'Sign In',

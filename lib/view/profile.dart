@@ -1,15 +1,41 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:umate/model/user.dart';
+import 'package:umate/controller/profile_c.dart'; 
+import 'package:umate/view/login.dart'; 
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final User user;
+
+  const ProfilePage({Key? key, required this.user}) : super(key: key);
 
   @override
   ProfileState createState() => ProfileState();
 }
 
 class ProfileState extends State<ProfilePage> {
-  TextEditingController name = TextEditingController(text: 'John Doe');
-  TextEditingController email = TextEditingController(text: 'john.doe@example.com');
+  late TextEditingController name;
+  late TextEditingController email;
+  final ProfileController _profileController = ProfileController();
+  File? _image;
+
+  @override
+  void initState() {
+    super.initState();
+    name = TextEditingController(text: widget.user.name ?? '');
+    email = TextEditingController(text: widget.user.email);
+  }
+
+  Future<void> _getImage() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +62,16 @@ class ProfileState extends State<ProfilePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const SizedBox(height: 30),
-                  const CircleAvatar(
-                    radius: 80,
-                    backgroundImage: AssetImage('assets/profile_pic.png'),
+                  GestureDetector(
+                    onTap: _getImage,
+                    child: CircleAvatar(
+                      radius: 80,
+                      backgroundImage: _image != null ? FileImage(_image!) : null,
+                      child: _image == null ? Icon(Icons.add_a_photo, size: 40) : null,
+                    ),
                   ),
                   const SizedBox(height: 50),
-                  passField('Username', 'Username', fontSize: 20.0),
+                  passField('Username', widget.user.username, fontSize: 20.0),
                   const SizedBox(height: 20),
                   normalField('Name', name, fontSize: 20.0),
                   const SizedBox(height: 20),
@@ -51,7 +81,7 @@ class ProfileState extends State<ProfilePage> {
                   const SizedBox(height: 50),
                   ElevatedButton(
                     onPressed: () {
-                      // Implement change password functionality
+                      _profileController.passwordReset(email.text);
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 30.0),
@@ -63,8 +93,13 @@ class ProfileState extends State<ProfilePage> {
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {
-                      // Implement delete account functionality
+                    onPressed: () async {
+                      try {
+                        await _profileController.deleteAccount(widget.user.id);
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => LogIn()));
+                      } catch (error) {
+                        print('Failed to delete account: $error');
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 40.0),
@@ -75,10 +110,35 @@ class ProfileState extends State<ProfilePage> {
                       style: TextStyle(fontSize: 18),
                     ),
                   ),
+
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {
-                      // Leave save button function empty for now
+                    onPressed: () async {
+                      // Update user information
+                      final updatedUser = User(
+                        id: widget.user.id,
+                        //profilePicture: _image,
+                        username: widget.user.username,
+                        name: name.text,
+                        email: email.text,
+                        password: widget.user.password,
+                        passwordConfirm: widget.user.passwordConfirm,
+                      );
+                      final success = await _profileController.updateProfile(widget.user.id, updatedUser);
+                      if (success) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Profile Updated'),
+                            backgroundColor: Colors.lightGreen[300],
+                            margin: EdgeInsets.all(10.0),
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              side: BorderSide(color: Colors.green, width: 2.0),
+                            ),
+                          ),
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 75.0),
@@ -146,4 +206,3 @@ class ProfileState extends State<ProfilePage> {
     );
   }
 }
-

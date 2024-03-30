@@ -34,7 +34,7 @@ class SideBar extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const LogIn()),
+                        MaterialPageRoute(builder: (context) => LogIn()),
                       );
                     },
                     child: const Text('Log In'),

@@ -3,18 +3,24 @@ import 'package:umate/controller/registration_c.dart';
 import 'package:umate/model/user.dart';
 import 'package:umate/view/login.dart';
 
-class Registration extends StatelessWidget {
+class Registration extends StatefulWidget {
   final RegistrationController _controller = RegistrationController();
 
   Registration({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final TextEditingController nameCon = TextEditingController();
-    final TextEditingController emailCon = TextEditingController();
-    final TextEditingController passwordCon = TextEditingController();
-    final TextEditingController confirmPass = TextEditingController();
+  _RegistrationState createState() => _RegistrationState();
+}
 
+class _RegistrationState extends State<Registration> {
+  final TextEditingController nameCon = TextEditingController();
+  final TextEditingController emailCon = TextEditingController();
+  final TextEditingController passwordCon = TextEditingController();
+  final TextEditingController confirmPass = TextEditingController();
+  String? errorMessage;
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -31,7 +37,9 @@ class Registration extends StatelessWidget {
             child: Container(
               margin: const EdgeInsets.all(5.0),
               decoration: BoxDecoration(
-                border: Border.all(color: const Color.fromARGB(255, 185, 205, 205), width: 10.0),
+                border: Border.all(
+                    color: const Color.fromARGB(255, 185, 205, 205),
+                    width: 10.0),
                 borderRadius: BorderRadius.circular(20.0),
               ),
               child: Column(
@@ -109,8 +117,15 @@ class Registration extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 30),
+                  errorMessage != null
+                      ? Text(
+                          errorMessage!,
+                          style: TextStyle(color: Colors.red, fontSize: 20,),
+                        )
+                      : SizedBox(),
+                  const SizedBox(height: 30),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       final user = User(
                         username: nameCon.text,
                         email: emailCon.text,
@@ -118,11 +133,22 @@ class Registration extends StatelessWidget {
                         passwordConfirm: confirmPass.text,
                       );
 
-                      _controller.signUp(context, user);
+                      final error =
+                          await widget._controller.signUp(context, user);
+                      if (error != null) {
+                        setState(() {
+                          errorMessage = error;
+                        });
+                      }
                     },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 40.0),
-                      backgroundColor: const Color.fromARGB(255, 220, 238, 238),
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                        const EdgeInsets.symmetric(
+                            vertical: 15.0, horizontal: 40.0),
+                      ),
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        const Color.fromARGB(255, 220, 238, 238),
+                      ),
                     ),
                     child: const Text(
                       'Sign Up',
@@ -136,7 +162,7 @@ class Registration extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const LogIn()),
+                          MaterialPageRoute(builder: (context) => LogIn()),
                         );
                       },
                       child: const Text(
