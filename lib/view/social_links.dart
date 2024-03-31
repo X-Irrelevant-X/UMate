@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:umate/view/sidebar.dart';
 
 class SocialLinks extends StatefulWidget {
   const SocialLinks({Key? key}) : super(key: key);
@@ -17,7 +18,20 @@ class _SocialMediaDialogState extends State<SocialLinks> {
       appBar: AppBar(
         title: Text('Social Media Links'),
         centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 185, 205, 205),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ), 
       ),
+      drawer: const SideBar(),
+
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

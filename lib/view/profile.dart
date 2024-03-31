@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:umate/model/user.dart';
 import 'package:umate/controller/profile_c.dart';
 import 'package:umate/view/login.dart';
+import 'package:umate/view/sidebar.dart';
 
 class ProfilePage extends StatefulWidget {
   final User user;
@@ -47,9 +48,19 @@ class ProfileState extends State<ProfilePage> {
           style: TextStyle(fontSize: 30),
         ),
         centerTitle: true,
-        backgroundColor:
-            const Color.fromARGB(255, 185, 205, 205), // Medium green
+        backgroundColor: const Color.fromARGB(255, 185, 205, 205),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ), 
       ),
+      drawer: const SideBar(),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(

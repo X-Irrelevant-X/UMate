@@ -16,12 +16,21 @@ class ChatPage extends StatelessWidget {
         ),
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 185, 205, 205),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ), 
       ),
+      drawer: const SideBar(),
+      
       body: Row(
         children: [
-          // Left column
-          const SideBar(),
-
           // Right column
           Expanded(
             child: Column(

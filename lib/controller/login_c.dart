@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:umate/model/user.dart';
 import 'package:umate/model/pref_keys.dart';
 import 'package:umate/view/profile.dart';
+import 'package:umate/view/login.dart';
 import 'package:umate/pb_connect.dart';
 
 class LoginController {
@@ -15,14 +16,12 @@ class LoginController {
   Future<void> login(
       BuildContext context, String email, String password) async {
     try {
-      final authData =
-          await pb.collection('users').authWithPassword(email, password);
+      final authData = await pb.collection('users').authWithPassword(email, password);
       print(pb.authStore.isValid);
       print(pb.authStore.token);
       print(pb.authStore.model.id);
 
-      final uId = (pb.authStore.model.id)
-          .toString(); //authData.record?.data['id'].toString() ?? "";
+      final uId = (pb.authStore.model.id).toString();
       final fetchedUserRecord = await pb.collection('users').getOne(uId);
       final fetchedUserData = fetchedUserRecord.toJson();
       final fetchedUser = User.fromJson(fetchedUserData);
@@ -37,17 +36,16 @@ class LoginController {
         context,
         MaterialPageRoute(builder: (context) => ProfilePage(user: fetchedUser)),
       );
-
-      // // Create a User object from fetched user data
-      // final user = User.fromJson(userData);
-
-      // // Navigate to profile page with user object
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => ProfilePage(user: user)),
-      // );
     } catch (error) {
       print('Error occurred during login: $error');
     }
+  }
+
+  Future<void> logout(BuildContext context) async {
+    pb.authStore.clear();
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LogIn()),
+    );
   }
 }

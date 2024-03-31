@@ -6,17 +6,6 @@ class ProfileController {
   Future<bool> updateProfile(recordId, User updatedUser) async {
     try {
       final body = updatedUser.toJson();
-      // final body = <String, dynamic>{
-      //   "id": updatedUser.id,
-      //   "username": updatedUser.username,
-      //   "name": updatedUser.name,
-      //   "email": updatedUser.email,
-      //   "password": updatedUser.password,
-      //   "passwordConfirm": updatedUser.passwordConfirm,
-      // };
-      // print(updatedUser.id);
-      // print(updatedUser.name);
-      // print(body);
       await pb.collection('users').update(recordId, body: body);
       print(updatedUser.name);
       return true;

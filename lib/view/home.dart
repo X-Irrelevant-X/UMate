@@ -41,6 +41,7 @@ class MyHomePage extends StatelessWidget {
         ),
       ),
       drawer: const SideBar(),
+      
       body: Row(
         children: [
           Expanded(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:umate/controller/registration_c.dart';
 import 'package:umate/model/user.dart';
 import 'package:umate/view/login.dart';
+import 'package:umate/view/sidebar.dart';
 
 class Registration extends StatefulWidget {
   final RegistrationController _controller = RegistrationController();
@@ -29,7 +30,19 @@ class _RegistrationState extends State<Registration> {
         ),
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 185, 205, 205),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
       ),
+      drawer: const SideBar(),
+
       body: SingleChildScrollView(
         child: Center(
           child: Padding(

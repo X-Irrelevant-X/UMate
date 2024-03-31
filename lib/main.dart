@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:umate/view/home.dart';
+import 'package:umate/view/login.dart';
 import 'package:umate/pb_connect.dart';
 
 void main() {
@@ -11,10 +11,10 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'UMate',
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: LogIn(),
     );
   }
 }

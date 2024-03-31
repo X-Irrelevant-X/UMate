@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:umate/view/sidebar.dart';
 import 'package:umate/view/chat.dart';
-import 'package:umate/view/home.dart';
 
 class Friends extends StatelessWidget {
   const Friends({super.key});
@@ -17,17 +16,20 @@ class Friends extends StatelessWidget {
           ),
           centerTitle: true,
           backgroundColor: const Color.fromARGB(255, 185, 205, 205),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              );
             },
-          ),
+          ), 
         ),
+        drawer: const SideBar(),
         body: Row(
           children: [
-            // Left column
-            const SideBar(),
             // Right column with top margin
             Expanded(
               child: Padding(

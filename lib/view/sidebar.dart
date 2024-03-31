@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:umate/controller/sidebar_c.dart';
+import 'package:umate/controller/login_c.dart';
 import 'package:umate/view/advising.dart';
-import 'package:umate/view/profile.dart';
-import 'package:umate/model/user.dart';
 import 'package:umate/view/friends.dart';
 import 'package:umate/view/notes.dart';
 import 'package:umate/view/social_links.dart';
 //import 'package:umate/view/advising.dart';
 
 class SideBar extends StatelessWidget {
-  final User user;
-
-  const SideBar({Key? key, required this.user}) : super(key: key);
+  const SideBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +16,8 @@ class SideBar extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 185, 205, 205),
-            ),
+          const DrawerHeader(
+            decoration: BoxDecoration( color: const Color.fromARGB(255, 185, 205, 205),),
             child: Text(
               'Menu',
               style: TextStyle(
@@ -34,10 +30,7 @@ class SideBar extends StatelessWidget {
             leading: Icon(Icons.person),
             title: Text('Profile'),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfilePage(user: user)),
-              );
+              SidebarController();
             },
           ),
           ListTile(
@@ -85,7 +78,7 @@ class SideBar extends StatelessWidget {
             leading: Icon(Icons.logout),
             title: Text('Logout'),
             onTap: () {
-              // Add your settings logic here
+              LoginController().logout(context);
             },
           ),
         ],
