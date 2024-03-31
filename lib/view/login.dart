@@ -7,8 +7,10 @@ class LogIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
+    TextEditingController emailController =
+        TextEditingController(text: 'yorozuya@gmail.com');
+    TextEditingController passwordController =
+        TextEditingController(text: '12345678');
 
     return Scaffold(
       appBar: AppBar(
@@ -26,7 +28,9 @@ class LogIn extends StatelessWidget {
             child: Container(
               margin: const EdgeInsets.all(5.0),
               decoration: BoxDecoration(
-                border: Border.all(color: const Color.fromARGB(255, 185, 205, 205), width: 10.0),
+                border: Border.all(
+                    color: const Color.fromARGB(255, 185, 205, 205),
+                    width: 10.0),
                 borderRadius: BorderRadius.circular(20.0),
               ),
               child: Column(
@@ -81,7 +85,8 @@ class LogIn extends StatelessWidget {
                   const SizedBox(height: 50),
                   ElevatedButton(
                     onPressed: () {
-                      _controller.login(context, emailController.text, passwordController.text);
+                      _controller.login(context, emailController.text,
+                          passwordController.text);
                     },
                     child: const Text(
                       'Sign In',
@@ -97,12 +102,12 @@ class LogIn extends StatelessWidget {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: const Text('Enter Email to Reset Password:'),
+                              title:
+                                  const Text('Enter Email to Reset Password:'),
                               content: const Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  TextField(
-                                  ),
+                                  TextField(),
                                 ],
                               ),
                               actions: [

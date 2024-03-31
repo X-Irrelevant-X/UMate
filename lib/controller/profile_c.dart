@@ -1,15 +1,22 @@
-import 'package:pocketbase/pocketbase.dart';
 import 'package:umate/model/user.dart';
-
-final pb = PocketBase('http://10.0.2.2:8090');
+import 'package:umate/pb_connect.dart';
 
 class ProfileController {
+  final pb = PocketBaseInstance.instance;
   Future<bool> updateProfile(recordId, User updatedUser) async {
     try {
       final body = updatedUser.toJson();
-      print(updatedUser.id);
-      print(updatedUser.name);
-      print(body);
+      // final body = <String, dynamic>{
+      //   "id": updatedUser.id,
+      //   "username": updatedUser.username,
+      //   "name": updatedUser.name,
+      //   "email": updatedUser.email,
+      //   "password": updatedUser.password,
+      //   "passwordConfirm": updatedUser.passwordConfirm,
+      // };
+      // print(updatedUser.id);
+      // print(updatedUser.name);
+      // print(body);
       await pb.collection('users').update(recordId, body: body);
       print(updatedUser.name);
       return true;
@@ -21,6 +28,7 @@ class ProfileController {
   Future<void> passwordReset(email) {
     return pb.collection('users').requestPasswordReset(email);
   }
+
   Future<void> deleteAccount(userId) async {
     try {
       await pb.collection('users').delete(userId);

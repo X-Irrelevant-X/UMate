@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:umate/view/home.dart';
+import 'package:umate/pb_connect.dart';
 
 void main() {
   runApp(const MainApp());
@@ -17,4 +18,3 @@ class MainApp extends StatelessWidget {
     );
   }
 }
-

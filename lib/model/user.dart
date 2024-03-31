@@ -23,7 +23,7 @@ class User {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'avatar': avatar,
+      //'avatar': avatar,
       'username': username,
       'name': name,
       'email': email,
@@ -35,7 +35,7 @@ class User {
   static User fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'] ?? '',
-      avatar: json['avatar'] ?? '',
+      //avatar: json['avatar'] ?? '',
       username: json['username'] ?? '',
       name: json['name'] ?? '',
       email: json['email'] ?? '',

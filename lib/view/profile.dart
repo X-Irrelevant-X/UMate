@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:umate/model/user.dart';
-import 'package:umate/controller/profile_c.dart'; 
-import 'package:umate/view/login.dart'; 
+import 'package:umate/controller/profile_c.dart';
+import 'package:umate/view/login.dart';
 
 class ProfilePage extends StatefulWidget {
   final User user;
@@ -28,7 +28,8 @@ class ProfileState extends State<ProfilePage> {
   }
 
   Future<void> _getImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
 
     setState(() {
       if (pickedFile != null) {
@@ -46,7 +47,8 @@ class ProfileState extends State<ProfilePage> {
           style: TextStyle(fontSize: 30),
         ),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 185, 205, 205), // Medium green
+        backgroundColor:
+            const Color.fromARGB(255, 185, 205, 205), // Medium green
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -55,7 +57,9 @@ class ProfileState extends State<ProfilePage> {
             child: Container(
               margin: const EdgeInsets.all(5.0),
               decoration: BoxDecoration(
-                border: Border.all(color: const Color.fromARGB(255, 185, 205, 205), width: 10.0),
+                border: Border.all(
+                    color: const Color.fromARGB(255, 185, 205, 205),
+                    width: 10.0),
                 borderRadius: BorderRadius.circular(20.0),
               ),
               child: Column(
@@ -66,8 +70,11 @@ class ProfileState extends State<ProfilePage> {
                     onTap: _getImage,
                     child: CircleAvatar(
                       radius: 80,
-                      backgroundImage: _image != null ? FileImage(_image!) : null,
-                      child: _image == null ? Icon(Icons.add_a_photo, size: 40) : null,
+                      backgroundImage:
+                          _image != null ? FileImage(_image!) : null,
+                      child: _image == null
+                          ? Icon(Icons.add_a_photo, size: 40)
+                          : null,
                     ),
                   ),
                   const SizedBox(height: 50),
@@ -84,7 +91,8 @@ class ProfileState extends State<ProfilePage> {
                       _profileController.passwordReset(email.text);
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 30.0),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15.0, horizontal: 30.0),
                     ),
                     child: const Text(
                       'Change Password',
@@ -96,21 +104,22 @@ class ProfileState extends State<ProfilePage> {
                     onPressed: () async {
                       try {
                         await _profileController.deleteAccount(widget.user.id);
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => LogIn()));
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => LogIn()));
                       } catch (error) {
                         print('Failed to delete account: $error');
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 40.0),
-                      backgroundColor: Colors.red[100], 
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15.0, horizontal: 40.0),
+                      backgroundColor: Colors.red[100],
                     ),
                     child: const Text(
                       'Delete Account',
                       style: TextStyle(fontSize: 18),
                     ),
                   ),
-
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () async {
@@ -124,7 +133,8 @@ class ProfileState extends State<ProfilePage> {
                         password: widget.user.password,
                         passwordConfirm: widget.user.passwordConfirm,
                       );
-                      final success = await _profileController.updateProfile(widget.user.id, updatedUser);
+                      final success = await _profileController.updateProfile(
+                          widget.user.id, updatedUser);
                       if (success) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -141,8 +151,9 @@ class ProfileState extends State<ProfilePage> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 75.0),
-                      backgroundColor: Colors.lightGreen[300], 
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15.0, horizontal: 75.0),
+                      backgroundColor: Colors.lightGreen[300],
                     ),
                     child: const Text(
                       'Save',
@@ -159,7 +170,8 @@ class ProfileState extends State<ProfilePage> {
     );
   }
 
-  Widget normalField(String label, TextEditingController controller, {double fontSize = 15.0}) {
+  Widget normalField(String label, TextEditingController controller,
+      {double fontSize = 15.0}) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 30.0),
       child: Row(

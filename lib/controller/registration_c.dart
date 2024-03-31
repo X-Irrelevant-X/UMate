@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:umate/model/user.dart';
 import 'package:umate/view/profile.dart';
 import 'package:umate/view/login.dart';
-import 'package:pocketbase/pocketbase.dart';
-
-final pb = PocketBase('http://10.0.2.2:8090/');
+import 'package:umate/pb_connect.dart';
 
 class RegistrationController {
+  final pb = PocketBaseInstance.instance;
   Future<String?> signUp(BuildContext context, User user) async {
     try {
       if (user.username.isEmpty ||
