@@ -61,6 +61,7 @@ class ProfileState extends State<ProfilePage> {
         ), 
       ),
       drawer: const SideBar(),
+      
       body: Center(
         child: SingleChildScrollView(
           child: Padding(

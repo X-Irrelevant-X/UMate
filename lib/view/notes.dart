@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:umate/view/sidebar.dart';
-import 'package:umate/view/home.dart';
 
 class Notes extends StatelessWidget {
   final List<Map<String, String>> notes = [
@@ -22,17 +21,21 @@ class Notes extends StatelessWidget {
           ),
           centerTitle: true,
           backgroundColor: const Color.fromARGB(255, 185, 205, 205),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              );
             },
-          ),
+          ), 
         ),
+        drawer: const SideBar(),
+        
         body: Row(
           children: [
-            // Left column
-            const SideBar(),
             // Right column
             Expanded(
               child: Column(
