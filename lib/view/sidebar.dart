@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:umate/controller/sidebar_c.dart';
-import 'package:umate/controller/login_c.dart';
 import 'package:umate/view/advising.dart';
 import 'package:umate/view/friends.dart';
 import 'package:umate/view/notes.dart';
 import 'package:umate/view/social_links.dart';
-//import 'package:umate/view/advising.dart';
+import 'package:umate/controller/login_c.dart';
 
 class SideBar extends StatelessWidget {
   const SideBar({Key? key}) : super(key: key);
@@ -17,7 +16,8 @@ class SideBar extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           const DrawerHeader(
-            decoration: BoxDecoration( color: const Color.fromARGB(255, 185, 205, 205),),
+            decoration:
+                BoxDecoration(color: Color.fromARGB(255, 185, 205, 205)),
             child: Text(
               'Menu',
               style: TextStyle(
@@ -30,47 +30,35 @@ class SideBar extends StatelessWidget {
             leading: Icon(Icons.person),
             title: Text('Profile'),
             onTap: () {
-              SidebarController();
+              SidebarController().fetchUser(context);
             },
           ),
           ListTile(
             leading: Icon(Icons.chat),
             title: Text('Friends'),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Friends()),
-              );
+              SidebarController().navigateToPage(context, Friends());
             },
           ),
           ListTile(
             leading: Icon(Icons.note),
             title: Text('Notes'),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Notes()),
-              );
+              SidebarController().navigateToPage(context, Notes());
             },
           ),
           ListTile(
             leading: Icon(Icons.link_rounded),
             title: Text('Social Links'),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SocialLinks()),
-              );
+              SidebarController().navigateToPage(context, SocialLinks());
             },
           ),
           ListTile(
             leading: Icon(Icons.calendar_today),
             title: Text('Advising Planning'),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AdvisingPlanning()),
-              );
+              SidebarController().navigateToPage(context, AdvisingPlanning());
             },
           ),
           const Divider(),
