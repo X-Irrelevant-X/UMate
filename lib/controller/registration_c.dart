@@ -1,46 +1,42 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:umate/model/user.dart';
-import 'package:umate/view/profile.dart';
 import 'package:umate/view/login.dart';
-import 'package:umate/pb_connect.dart';
+import 'package:umate/model/user.dart';
+import 'package:umate/fireDB_connect.dart';
+import 'package:umate/view/home.dart';
 
 class RegistrationController {
-  final pb = PocketBaseInstance.instance;
-  Future<String?> signUp(BuildContext context, User user) async {
+  final fDB = FireDBInstance.instance;
+  Future<void> signUp(BuildContext context, UserT user) async {
     try {
-      if (user.username.isEmpty ||
-          user.email.isEmpty ||
-          user.password.isEmpty ||
-          user.passwordConfirm.isEmpty) {
-        return 'All fields are required.';
-      }
+      final UserCredential credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: user.email,
+        password: user.password!,
+      );
 
-      if (user.password != user.passwordConfirm) {
-        return "Passwords don't match.";
-      }
+      print('Checking Credentials.....');
+      print(credential.user!.uid);
+      print(credential.user!.email);
 
-      final record = await pb.collection('users').create(body: user.toJson());
-      print(record);
-      await pb.collection('users').requestVerification(user.email);
+      await fDB.collection('users').doc(credential.user!.email).set({
+        'uid': credential.user!.uid,
+        'username': user.username,
+        'email': credential.user!.email,
+      });
 
-      //final fetchedUserRecord = await pb.collection('users').getOne(record.id);
-      //final fetchedUserData = fetchedUserRecord.toJson();
-      //final fetchedUser = User.fromJson(fetchedUserData);
+      final userRecord = FirebaseAuth.instance.currentUser;
+      print('Current User: $userRecord');
 
-      //Navigator.push(
-      //  context,
-      //  MaterialPageRoute(builder: (context) => ProfilePage(user: fetchedUser)),
-      //);
+      // final record = await pb.collection('users').create(body: user.toJson());
+      // print(record);
+      // await pb.collection('users').requestVerification(user.email);
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => LogIn()),
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
-
-      return null;
     } catch (error) {
       print('Error occurred during registration: $error');
-      return 'Username or Email already taken';
     }
   }
 

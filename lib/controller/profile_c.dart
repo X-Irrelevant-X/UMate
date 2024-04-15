@@ -1,28 +1,29 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:umate/model/user.dart';
-import 'package:umate/pb_connect.dart';
+import 'package:umate/fireDB_connect.dart';
 
 class ProfileController {
-  final pb = PocketBaseInstance.instance;
-  Future<bool> updateProfile(recordId, User updatedUser) async {
+ final fDB = FireDBInstance.instance;
+
+ Future<bool> updateProfile(String email, UserT updatedUser) async {
     try {
-      final body = updatedUser.toJson();
-      await pb.collection('users').update(recordId, body: body);
-      print(updatedUser.name);
+      await fDB.collection('users').doc(email).update({
+        'username': updatedUser.username,
+        'name': updatedUser.name,
+        'gender': updatedUser.gender,
+      });
       return true;
     } catch (error) {
       throw Exception('Failed to update profile: $error');
     }
-  }
+ }
 
-  Future<void> passwordReset(email) {
-    return pb.collection('users').requestPasswordReset(email);
-  }
-
-  Future<void> deleteAccount(userId) async {
+ Future<void> deleteAccount(String email) async {
     try {
-      await pb.collection('users').delete(userId);
+      await FirebaseAuth.instance.currentUser?.delete();
+      await fDB.collection('users').doc(email).delete();
     } catch (error) {
       throw Exception('Failed to delete account: $error');
     }
-  }
+ }
 }

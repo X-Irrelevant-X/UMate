@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "260237131689",
+    "project_id": "umate-astra",
+    "storage_bucket": "umate-astra.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:260237131689:android:395963bef0101be1e10eb8",
+        "android_client_info": {
+          "package_name": "com.example.umate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzzoDUYLjwDyX0d6Eww7oSJzur5MuIFPs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

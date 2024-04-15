@@ -7,7 +7,7 @@ import 'package:umate/view/social_links.dart';
 import 'package:umate/controller/login_c.dart';
 
 class SideBar extends StatelessWidget {
-  const SideBar({Key? key}) : super(key: key);
+  const SideBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +19,10 @@ class SideBar extends StatelessWidget {
             decoration:
                 BoxDecoration(color: Color.fromARGB(255, 185, 205, 205)),
             child: Text(
-              'Menu',
+              'Welcome',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 25,
+                fontSize: 35,
               ),
             ),
           ),

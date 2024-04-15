@@ -4,16 +4,19 @@ import 'package:umate/view/registration.dart';
 import 'package:umate/view/sidebar.dart';
 
 class LogIn extends StatelessWidget {
-  final LoginController _controller = LoginController();
+  const LogIn({super.key});
 
   @override
   Widget build(BuildContext context) {
     TextEditingController emailController =
-        TextEditingController(text: 'yorozuya@gmail.com');
+        TextEditingController(text: 'fardousnayeem35@gmail.com');
     TextEditingController passwordController =
         TextEditingController(text: '12345678');
+    TextEditingController resetCon =
+        TextEditingController();
 
     return Scaffold(
+      //backgroundColor: Colors.grey[300],
       appBar: AppBar(
         title: const Text(
           'Sign In',
@@ -98,8 +101,11 @@ class LogIn extends StatelessWidget {
                   const SizedBox(height: 50),
                   ElevatedButton(
                     onPressed: () {
-                      _controller.login(context, emailController.text,
-                          passwordController.text);
+                      LoginController().login(
+                        context, 
+                        emailController.text.trim(),
+                        passwordController.text.trim()
+                      );
                     },
                     child: const Text(
                       'Sign In',
@@ -115,20 +121,31 @@ class LogIn extends StatelessWidget {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title:
-                                  const Text('Enter Email to Reset Password:'),
-                              content: const Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  TextField(),
-                                ],
+                              title: const Text('Enter Email to Reset Password:'),
+                              content: SingleChildScrollView(
+                                child: ListBody(
+                                  children: [
+                                    TextFormField(
+                                      controller: resetCon,
+                                      decoration: const InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        contentPadding: EdgeInsets.all(10.0),
+                                        labelText: 'Email',
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                               actions: [
-                                ElevatedButton(
+                                ElevatedButton.icon(
                                   onPressed: () {
-                                    // Implement recover password functionality
+                                    LoginController().resertPassword(
+                                      context,
+                                      resetCon.text.trim(),
+                                    );
                                   },
-                                  child: const Text('Recover Password'),
+                                  icon: Icon(Icons.email_outlined),
+                                  label: const Text('Reset Password'),
                                 ),
                               ],
                             );

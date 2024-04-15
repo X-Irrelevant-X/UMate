@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:umate/controller/registration_c.dart';
 import 'package:umate/model/user.dart';
 import 'package:umate/view/login.dart';
 import 'package:umate/view/sidebar.dart';
 
 class Registration extends StatefulWidget {
-  final RegistrationController _controller = RegistrationController();
 
-  Registration({Key? key}) : super(key: key);
+  const Registration({super.key});
 
   @override
-  _RegistrationState createState() => _RegistrationState();
+  RegistrationState createState() => RegistrationState();
 }
 
-class _RegistrationState extends State<Registration> {
-  final TextEditingController nameCon = TextEditingController();
+class RegistrationState extends State<Registration> {
+  final TextEditingController usernameCon = TextEditingController();
   final TextEditingController emailCon = TextEditingController();
   final TextEditingController passwordCon = TextEditingController();
   final TextEditingController confirmPass = TextEditingController();
@@ -79,7 +79,7 @@ class _RegistrationState extends State<Registration> {
                         ),
                         const SizedBox(height: 10),
                         TextFormField(
-                          controller: nameCon,
+                          controller: usernameCon,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.all(10.0),
@@ -133,25 +133,43 @@ class _RegistrationState extends State<Registration> {
                   errorMessage != null
                       ? Text(
                           errorMessage!,
-                          style: TextStyle(color: Colors.red, fontSize: 20,),
+                          style: const TextStyle(color: Colors.red, fontSize: 20,),
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                   const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () async {
-                      final user = User(
-                        username: nameCon.text,
-                        email: emailCon.text,
-                        password: passwordCon.text,
-                        passwordConfirm: confirmPass.text,
+                      final user = UserT(
+                        username: usernameCon.text.trim(),
+                        email: emailCon.text.trim(),
+                        password: passwordCon.text.trim(),
                       );
 
-                      final error =
-                          await widget._controller.signUp(context, user);
-                      if (error != null) {
+                      if (
+                        usernameCon.text.trim().isEmpty ||
+                        emailCon.text.trim().isEmpty ||
+                        passwordCon.text.trim().isEmpty ||
+                        confirmPass.text.trim().isEmpty) {
                         setState(() {
-                          errorMessage = error;
+                          errorMessage = 'All fields are required.';
+                          
                         });
+                        Timer(const Duration(seconds: 2), () {
+                          setState(() {
+                            errorMessage = null;
+                          });
+                        });
+                      } else if (passwordCon.text.trim() != confirmPass.text.trim()) {
+                        setState(() {
+                          errorMessage = "Passwords don't match.";
+                        });
+                        Timer(const Duration(seconds: 2), () {
+                          setState(() {
+                            errorMessage = null;
+                          });
+                        });
+                      } else if (errorMessage == null) {
+                        RegistrationController().signUp(context, user);
                       }
                     },
                     style: ButtonStyle(

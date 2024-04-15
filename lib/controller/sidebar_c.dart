@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:umate/model/user.dart';
 import 'package:umate/view/profile.dart';
-import 'package:umate/pb_connect.dart';
 import 'package:umate/view/login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:umate/fireDB_connect.dart';
 
 class SidebarController {
-  final pb = PocketBaseInstance.instance;
+ final fDB = FireDBInstance.instance;
 
-  bool get isAuth {
-    return pb.authStore.isValid && pb.authStore.token.isNotEmpty;
-  }
-
-  Future<void> fetchUser(BuildContext context) async {
+ Future<void> fetchUser(BuildContext context) async {
     try {
-      print(pb.authStore.isValid);
-      print(pb.authStore.token);
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final fetchedUserRecord = await fDB.collection('users').doc(user.email).get();
+        final fetchedUserData = fetchedUserRecord.data();
+        final fUser = UserT.fromJson(fetchedUserData!);
 
-      if (isAuth) {
-        final uId = (pb.authStore.model.id).toString();
-        final fetchedUserRecord = await pb.collection('users').getOne(uId);
-        final fetchedUserData = fetchedUserRecord.toJson();
-        final fUser = User.fromJson(fetchedUserData);
+        print(fUser);
 
         Navigator.push(
           context,
@@ -35,11 +31,12 @@ class SidebarController {
     } catch (error) {
       print('Error Fetching User: $error');
     }
-  }
+ }
 
-  Future<void> navigateToPage(BuildContext context, Widget page) async {
+ Future<void> navigateToPage(BuildContext context, Widget page) async {
     try {
-      if (isAuth) {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => page),
@@ -53,5 +50,5 @@ class SidebarController {
     } catch (error) {
       print('Navigation Error: $error');
     }
-  }
+ }
 }

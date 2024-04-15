@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:umate/model/user.dart';
 import 'package:umate/controller/profile_c.dart';
+import 'package:umate/controller/login_c.dart';
 import 'package:umate/view/login.dart';
 import 'package:umate/view/sidebar.dart';
 
 class ProfilePage extends StatefulWidget {
-  final User user;
+  final UserT user;
 
-  const ProfilePage({Key? key, required this.user}) : super(key: key);
+  const ProfilePage({super.key, required this.user});
 
   @override
   ProfileState createState() => ProfileState();
@@ -17,7 +18,9 @@ class ProfilePage extends StatefulWidget {
 
 class ProfileState extends State<ProfilePage> {
   late TextEditingController name;
-  late TextEditingController email;
+  late TextEditingController username;
+  TextEditingController resetCon = TextEditingController();
+  String? gender;
   final ProfileController _profileController = ProfileController();
   File? _image;
 
@@ -25,7 +28,8 @@ class ProfileState extends State<ProfilePage> {
   void initState() {
     super.initState();
     name = TextEditingController(text: widget.user.name ?? '');
-    email = TextEditingController(text: widget.user.email);
+    username = TextEditingController(text: widget.user.username ?? '');
+    gender = widget.user.gender;
   }
 
   Future<void> _getImage() async {
@@ -85,22 +89,95 @@ class ProfileState extends State<ProfilePage> {
                       backgroundImage:
                           _image != null ? FileImage(_image!) : null,
                       child: _image == null
-                          ? Icon(Icons.add_a_photo, size: 40)
+                          ? const Icon(Icons.add_a_photo, size: 40)
                           : null,
                     ),
                   ),
                   const SizedBox(height: 50),
-                  passField('Username', widget.user.username, fontSize: 20.0),
+                  normalField('Username', widget.user.username!, fontSize: 20.0),
                   const SizedBox(height: 20),
-                  normalField('Name', name, fontSize: 20.0),
+                  editField('Name', name, fontSize: 20.0),
                   const SizedBox(height: 20),
-                  normalField('Email', email, fontSize: 20.0),
-                  const SizedBox(height: 30),
-                  passField('Password', '********', fontSize: 20.0),
+                  normalField('Email', widget.user.email, fontSize: 20.0),
+                  const SizedBox(height: 20),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 30.0),
+                    child:Row(
+                      children: [
+                        const Text(
+                          'Gender:',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        Radio(
+                          value: 'Male',
+                          groupValue: gender,
+                          onChanged: (value) {
+                            setState(() {
+                              gender = value;
+                            });
+                          },
+                        ),
+                        const Text('Male', style: TextStyle(fontSize: 20)),
+                        Radio(
+                          value: 'Female',
+                          groupValue: gender,
+                          onChanged: (value) {
+                            setState(() {
+                              gender = value;
+                            });
+                          },
+                        ),
+                        const Text('Female', style: TextStyle(fontSize: 20)),
+                        Radio(
+                          value: 'Other',
+                          groupValue: gender,
+                          onChanged: (value) {
+                            setState(() {
+                              gender = value;
+                            });
+                          },
+                        ),
+                        const Text('Other', style: TextStyle(fontSize: 20)),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 50),
                   ElevatedButton(
                     onPressed: () {
-                      _profileController.passwordReset(email.text);
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Enter Email to Reset Password:'),
+                              content: SingleChildScrollView(
+                                child: ListBody(
+                                  children: [
+                                    TextFormField(
+                                      controller: resetCon,
+                                      decoration: const InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        contentPadding: EdgeInsets.all(10.0),
+                                        labelText: 'Email',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                ElevatedButton.icon(
+                                  onPressed: () {
+                                    LoginController().resertPassword(
+                                      context,
+                                      resetCon.text.trim(),
+                                    );
+                                  },
+                                  icon: const Icon(Icons.email_outlined),
+                                  label: const Text('Reset Password'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
@@ -115,9 +192,9 @@ class ProfileState extends State<ProfilePage> {
                   ElevatedButton(
                     onPressed: () async {
                       try {
-                        await _profileController.deleteAccount(widget.user.id);
+                        await _profileController.deleteAccount(widget.user.email);
                         Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => LogIn()));
+                            MaterialPageRoute(builder: (context) => const LogIn()));
                       } catch (error) {
                         print('Failed to delete account: $error');
                       }
@@ -135,41 +212,35 @@ class ProfileState extends State<ProfilePage> {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () async {
-                      // Update user information
-                      final updatedUser = User(
-                        id: widget.user.id,
-                        //profilePicture: _image,
-                        username: widget.user.username,
-                        name: name.text,
-                        email: email.text,
-                        password: widget.user.password,
-                        passwordConfirm: widget.user.passwordConfirm,
-                      );
-                      final success = await _profileController.updateProfile(
-                          widget.user.id, updatedUser);
-                      if (success) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Profile Updated'),
-                            backgroundColor: Colors.lightGreen[300],
-                            margin: EdgeInsets.all(10.0),
-                            behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              side: BorderSide(color: Colors.green, width: 2.0),
-                            ),
-                          ),
+                        final updatedUser = UserT(
+                          username: widget.user.username,
+                          name: name.text,
+                          email: widget.user.email,
+                          gender: gender,
+                          password: widget.user.password,
                         );
-                      }
+                        try {
+                          final success = await _profileController.updateProfile(widget.user.email, updatedUser);
+                          if (success) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: const Text('Profile Updated'),
+                                backgroundColor: Colors.lightGreen[300],
+                              ),
+                            );
+                          }
+                        } catch (error) {
+                          print('Failed to update profile: $error');
+                        }
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 15.0, horizontal: 75.0),
+                          vertical: 15.0, horizontal: 80.0),
                       backgroundColor: Colors.lightGreen[300],
                     ),
                     child: const Text(
                       'Save',
-                      style: TextStyle(fontSize: 23),
+                      style: TextStyle(fontSize: 18),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -182,7 +253,7 @@ class ProfileState extends State<ProfilePage> {
     );
   }
 
-  Widget normalField(String label, TextEditingController controller,
+  Widget editField(String label, TextEditingController controller,
       {double fontSize = 15.0}) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -209,7 +280,7 @@ class ProfileState extends State<ProfilePage> {
     );
   }
 
-  Widget passField(String label, String value, {double fontSize = 15.0}) {
+  Widget normalField(String label, String value, {double fontSize = 15.0}) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 30.0),
       child: Row(
