@@ -1,157 +1,128 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:umate/view/sidebar.dart';
+import 'package:umate/controller/notes_c.dart';
+import 'package:umate/model/note_model.dart';
 
 class Notes extends StatelessWidget {
-  final List<Map<String, String>> notes = [
-    {'title': 'Note 1', 'body': 'This is the body of note 1', 'date': '2024-03-20'},
-    {'title': 'Note 2', 'body': 'This is the body of note 2', 'date': '2024-03-21'},
-    {'title': 'Note 3', 'body': 'This is the body of note 3', 'date': '2024-03-22'},
-  ];
+ final NoteController noteController;
 
-  Notes({super.key});
+ Notes({required this.noteController});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            "Notes",
-            style: TextStyle(fontSize: 30),
-          ),
-          centerTitle: true,
-          backgroundColor: const Color.fromARGB(255, 185, 205, 205),
-          leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-              );
-            },
-          ), 
+ @override
+ Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          "Notes",
+          style: TextStyle(fontSize: 30),
         ),
-        drawer: const SideBar(),
-        
-        body: Row(
-          children: [
-            // Right column
-            Expanded(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.153,
-                    child: GestureDetector(
-                      onTap: () {
-                        _showAddNotePopup(context);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            top: BorderSide(color: Colors.grey, width: 1),
-                            bottom: BorderSide(color: Colors.black, width: 1),
-                          ),
-                        ),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.note_add),
-                            SizedBox(width: 10),
-                            Text(
-                              'Add Note',
-                              style: TextStyle(fontSize: 25),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: List.generate(
-                          notes.length,
-                          (index) {
-                            return GestureDetector(
-                              onTap: () {
-                                _showNotePopup(context, notes[index]);
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(20),
-                                decoration: const BoxDecoration(
-                                  border: Border(bottom: BorderSide(color: Colors.grey, width: 3)),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          notes[index]['title']!,
-                                          style: const TextStyle(fontSize: 25),
-                                        ),
-                                        if (notes[index]['expanded'] == 'true') ...[
-                                          Text(
-                                            notes[index]['body']!,
-                                            style: const TextStyle(fontSize: 30),
-                                          ),
-                                        ],
-                                      ],
-                                    ),
-                                    Text(
-                                      notes[index]['date']!,
-                                      style: const TextStyle(fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 185, 205, 205),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
         ),
       ),
+      drawer: const SideBar(),
+      body: FutureBuilder<Stream<List<NoteM>>>(
+        future: noteController.getNotes(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            return StreamBuilder<List<NoteM>>(
+              stream: snapshot.data,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                 return Text('Error: ${snapshot.error}');
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                 return CircularProgressIndicator();
+                }
+                return ListView.builder(
+                 itemCount: snapshot.data!.length,
+                 itemBuilder: (context, index) {
+                    final note = snapshot.data![index];
+                    return ListTile(
+                      title: Text(note.title!),
+                      subtitle: Text(note.body!),
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Choose an action'),
+                              actions: <Widget>[
+                                TextButton(
+                                 child: Text('Edit'),
+                                 onPressed: () {
+                                    _showEditNotePopup(context, note.nid!, note);
+                                    //Navigator.pop(context);
+                                 },
+                                ),
+                                TextButton(
+                                 child: Text('Delete'),
+                                 onPressed: () {
+                                    noteController.deleteNote(noteId: note.nid!);
+                                    Navigator.pop(context);
+                                 },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    );
+                 },
+                );
+              },
+            );
+          }
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _showAddNotePopup(context);
+        },
+        child: Icon(Icons.add),
+        backgroundColor: const Color.fromARGB(255, 185, 205, 205),
+      ),
     );
-  }
+ }
 
-  void _showAddNotePopup(BuildContext context) {
+  void _showEditNotePopup(BuildContext context, String noteId, NoteM note) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        String noteTitle = '';
-        String noteBody = '';
-        String noteDate = '';
+        String noteTitle = note.title ?? '';
+        String noteBody = note.body ?? '';
 
         return AlertDialog(
-          title: const Text('Add Note'),
+          title: const Text('Edit Note'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
+                initialValue: noteTitle,
                 decoration: const InputDecoration(labelText: 'Title'),
                 onChanged: (value) {
                   noteTitle = value;
                 },
               ),
               TextFormField(
+                initialValue: noteBody,
                 decoration: const InputDecoration(labelText: 'Body'),
                 onChanged: (value) {
                   noteBody = value;
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Date'),
-                onChanged: (value) {
-                  noteDate = value;
                 },
               ),
             ],
@@ -159,9 +130,11 @@ class Notes extends StatelessWidget {
           actions: [
             ElevatedButton(
               onPressed: () {
-                _addNote(context, noteTitle, noteBody, noteDate);
+                final updatedNote = NoteM(nid: note.nid,title: noteTitle, body: noteBody, date: note.date);
+                noteController.updateNote(noteId, updatedNote);
+                Navigator.pop(context);
               },
-              child: const Text('Add'),
+              child: const Text('Save'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -175,28 +148,53 @@ class Notes extends StatelessWidget {
     );
   }
 
-  void _addNote(BuildContext context, String title, String body, String date) {
-    notes.insert(0, {'title': title, 'body': body, 'date': date});
-    Navigator.pop(context); // Close the Add Note popup
-  }
+ void _showAddNotePopup(BuildContext context) {
+    final formattedDate = DateFormat('hh:mm:ss a dd-MM-yyyy').format(DateTime.now());
 
-  void _showNotePopup(BuildContext context, Map<String, String> note) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        String noteTitle = '';
+        String noteBody = '';
+        String noteDate = formattedDate;
+
         return AlertDialog(
-          title: Text(note['title']!),
-          content: Text(note['body']!),
+          title: const Text('Add Note'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                decoration: const InputDecoration(labelText: 'Title'),
+                onChanged: (value) {
+                 noteTitle = value;
+                },
+              ),
+              TextFormField(
+                decoration: const InputDecoration(labelText: 'Body'),
+                onChanged: (value) {
+                 noteBody = value;
+                },
+              ),
+            ],
+          ),
           actions: [
+            ElevatedButton(
+              onPressed: () {
+                final newNote = NoteM(title: noteTitle, body: noteBody, date: noteDate);
+                noteController.addNote(newNote);
+                Navigator.pop(context);
+              },
+              child: const Text('Add'),
+            ),
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('Close'),
+              child: const Text('Cancel'),
             ),
           ],
         );
       },
     );
-  }
+ }
 }

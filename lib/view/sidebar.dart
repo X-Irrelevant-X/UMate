@@ -7,6 +7,7 @@ import 'package:umate/view/notes.dart';
 import 'package:umate/view/home.dart';
 import 'package:umate/view/social_links.dart';
 import 'package:umate/controller/login_c.dart';
+import 'package:umate/controller/notes_c.dart';
 
 class SideBar extends StatelessWidget {
   const SideBar({super.key});
@@ -106,7 +107,7 @@ class SideBar extends StatelessWidget {
             leading: Icon(Icons.note),
             title: Text('Notes'),
             onTap: () {
-              SidebarController().navigateToPage(context, Notes());
+              SidebarController().navigateToPage(context, Notes(noteController: NoteController()));
             },
           ),
           ListTile(
