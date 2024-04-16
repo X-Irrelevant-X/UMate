@@ -6,6 +6,8 @@ import 'package:umate/controller/profile_c.dart';
 import 'package:umate/controller/login_c.dart';
 import 'package:umate/view/login.dart';
 import 'package:umate/view/sidebar.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+
 
 class ProfilePage extends StatefulWidget {
   final UserT user;
@@ -103,45 +105,42 @@ class ProfileState extends State<ProfilePage> {
                   editField('Name', name, fontSize: 20.0),
                   const SizedBox(height: 20),
                   normalField('Email', widget.user.email, fontSize: 20.0),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 25),
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 30.0),
-                    child:Row(
+                    child: Row(
                       children: [
                         const Text(
                           'Gender:',
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                         ),
-                        Radio(
-                          value: 'Male',
-                          groupValue: gender,
-                          onChanged: (value) {
-                            setState(() {
-                              gender = value;
-                            });
-                          },
+                        SizedBox(width: 15),
+                        SizedBox(
+                          width: 85, 
+                          child: DropdownButton<String>(
+                            value: gender, 
+                            elevation: 5, 
+                            style: const TextStyle(color: Colors.black),
+                            underline: Container(
+                              height: 2,
+                              color: Colors.deepPurpleAccent,
+                            ),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                gender = newValue;
+                              });
+                            },
+                            items: <String>['Male', 'Female', 'Other']
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Center( // Center the text within the dropdown item
+                                  child: Text(value),
+                                ),
+                              );
+                            }).toList(),
+                          ),
                         ),
-                        const Text('Male', style: TextStyle(fontSize: 20)),
-                        Radio(
-                          value: 'Female',
-                          groupValue: gender,
-                          onChanged: (value) {
-                            setState(() {
-                              gender = value;
-                            });
-                          },
-                        ),
-                        const Text('Female', style: TextStyle(fontSize: 20)),
-                        Radio(
-                          value: 'Other',
-                          groupValue: gender,
-                          onChanged: (value) {
-                            setState(() {
-                              gender = value;
-                            });
-                          },
-                        ),
-                        const Text('Other', style: TextStyle(fontSize: 20)),
                       ],
                     ),
                   ),
@@ -219,6 +218,7 @@ class ProfileState extends State<ProfilePage> {
                         final updatedUser = UserT(
                           username: widget.user.username,
                           avatar: _image,
+                          avatarurl: widget.user.avatarurl,
                           name: name.text,
                           email: widget.user.email,
                           gender: gender,
@@ -267,12 +267,13 @@ class ProfileState extends State<ProfilePage> {
         children: [
           Text(
             '$label: ',
-            style: TextStyle(fontSize: fontSize),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize),
           ),
           Expanded(
             child: TextField(
               controller: controller,
               style: TextStyle(fontSize: fontSize),
+
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Enter $label',
@@ -287,22 +288,25 @@ class ProfileState extends State<ProfilePage> {
 
   Widget normalField(String label, String value, {double fontSize = 15.0}) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 30.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            '$label: ',
-            style: TextStyle(fontSize: fontSize),
-          ),
-          Expanded(
-            child: Text(
-              value,
+        margin: const EdgeInsets.symmetric(horizontal: 30.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              '$label: ',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize),
             ),
-          ),
-        ],
-      ),
+            Expanded(
+              child: AutoSizeText(
+                value,
+                style: TextStyle(fontSize: fontSize),
+                maxLines: 1, 
+                minFontSize: 12,
+                textAlign: TextAlign.left, 
+              ),
+            ),
+          ],
+        ),
     );
   }
 }

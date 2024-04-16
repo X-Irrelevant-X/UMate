@@ -35,7 +35,7 @@ class SideBar extends StatelessWidget {
                 return const DrawerHeader(
                  decoration: BoxDecoration(color: Color.fromARGB(255, 185, 205, 205)),
                  child: Text(
-                    'Error loading user data',
+                    'Log In First',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 35,

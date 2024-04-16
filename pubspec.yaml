@@ -17,6 +17,7 @@ dependencies:
   cloud_firestore: ^4.16.1
   firebase_storage: ^11.7.1
   path: any
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:
