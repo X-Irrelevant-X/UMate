@@ -86,9 +86,13 @@ class ProfileState extends State<ProfilePage> {
                     onTap: _getImage,
                     child: CircleAvatar(
                       radius: 80,
-                      backgroundImage:
-                          _image != null ? FileImage(_image!) : null,
-                      child: _image == null
+                      backgroundImage: _image != null
+                        ? FileImage(_image!) as ImageProvider<Object>?
+                        : widget.user.avatarurl != null
+                            ? NetworkImage(widget.user.avatarurl!) as ImageProvider<Object>? // Load image from URL
+                            : null,
+
+                      child: _image == null && widget.user.avatarurl == null
                           ? const Icon(Icons.add_a_photo, size: 40)
                           : null,
                     ),
@@ -214,6 +218,7 @@ class ProfileState extends State<ProfilePage> {
                     onPressed: () async {
                         final updatedUser = UserT(
                           username: widget.user.username,
+                          avatar: _image,
                           name: name.text,
                           email: widget.user.email,
                           gender: gender,

@@ -1,12 +1,14 @@
+import 'dart:io';
 //import 'package:umate/fireDB_connect.dart';
-
 //final fDB = FireDBInstance.instance;
+
 
 class UserT {
   String email;
   String? token;
   String? uid;
-  String? avatar;
+  File? avatar;
+  String? avatarurl;
   String? name;
   String? gender;
   String? username;
@@ -17,6 +19,7 @@ class UserT {
     this.token,
     this.uid,
     this.avatar,
+    this.avatarurl,
     this.name,
     this.gender,
     this.username,
@@ -28,7 +31,7 @@ class UserT {
       'email': email,
       'token': token,
       'uid': uid,
-      'avatar': avatar,
+      'avatarurl': avatarurl,
       'name': name,
       'gender': gender,
       'username': username,
@@ -41,7 +44,7 @@ class UserT {
       email: json['email'] ?? '',
       token: json['token'] ?? '',
       uid: json['uid'] ?? '',
-      avatar: json['avatar'] ?? '',
+      avatarurl: json['avatarurl'] ?? '',
       name: json['name'] ?? '',
       gender: json['gender'] ?? '',
       username: json['username'] ?? '',

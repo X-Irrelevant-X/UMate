@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:umate/model/user.dart';
 import 'package:umate/view/login.dart';
 import 'package:umate/view/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
