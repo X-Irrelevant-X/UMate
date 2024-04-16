@@ -123,7 +123,9 @@ class SideBar extends StatelessWidget {
               SidebarController().navigateToPage(context, AdvisingPlanning());
             },
           ),
+          const SizedBox(height: 10),
           const Divider(),
+          const SizedBox(height: 10),
           ListTile(
             leading: Icon(Icons.logout),
             title: Text('Logout'),
