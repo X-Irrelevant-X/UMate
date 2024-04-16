@@ -96,7 +96,7 @@ class Notes extends StatelessWidget {
                                               icon: Icon(Icons.star),
                                               tooltip: 'Star',
                                               onPressed: () {
-                                                  // Implement the functionality for the Star button
+                                                NoteController().starNote(note);
                                               },
                                             ),
                                             Text('Star'),

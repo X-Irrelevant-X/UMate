@@ -53,14 +53,16 @@ class NoteController {
     }
   }
 
-  // Future<void> starStatus({required String noteId, required bool isStarred}) async {
-  //   final user = _auth.currentUser;
-  //   if (user != null) {
-  //     await fDB.collection('notes').doc(user.email).collection('userNotes').doc(note.nid).update({
-  //       'star': note.star == 'yes' ? 'no' : 'yes',
-  //     });
-  //   }
-  // }
+  Future<void> starNote(NoteM note) async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final querySnapshot = await fDB.collection('notes').doc(user.email).collection('starredNotes').where('nid', isEqualTo: note.nid).get();
+      if (querySnapshot.docs.isNotEmpty) {
+        return;
+      }
+      await fDB.collection('notes').doc(user.email).collection('starredNotes').add(note.toJson());
+    }
+  }
 
   Future<void> updateNote(String noteId, NoteM updatedNote) async {
     final user = _auth.currentUser;

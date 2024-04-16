@@ -33,7 +33,7 @@ class RegistrationController {
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => HomePage()),
       );
     } catch (error) {
       print('Error occurred during registration: $error');
