@@ -266,7 +266,7 @@ class ProfileState extends State<ProfilePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            '$label: ',
+            '$label:  ',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize),
           ),
           Expanded(
@@ -293,7 +293,7 @@ class ProfileState extends State<ProfilePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              '$label: ',
+              '$label:  ',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize),
             ),
             Expanded(
