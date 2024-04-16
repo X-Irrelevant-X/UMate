@@ -49,40 +49,103 @@ class Notes extends StatelessWidget {
                  return CircularProgressIndicator();
                 }
                 return ListView.builder(
-                 itemCount: snapshot.data!.length,
-                 itemBuilder: (context, index) {
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
                     final note = snapshot.data![index];
-                    return ListTile(
-                      title: Text(note.title!),
-                      subtitle: Text(note.body!),
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text('Choose an action'),
-                              actions: <Widget>[
-                                TextButton(
-                                 child: Text('Edit'),
-                                 onPressed: () {
-                                    _showEditNotePopup(context, note.nid!, note);
-                                    //Navigator.pop(context);
-                                 },
-                                ),
-                                TextButton(
-                                 child: Text('Delete'),
-                                 onPressed: () {
-                                    noteController.deleteNote(noteId: note.nid!);
-                                    Navigator.pop(context);
-                                 },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
+                    final date = DateFormat('hh:mm:ss a dd-MM-yyyy').parseStrict(note.date!);
+                    final time = DateFormat('hh:mm a dd/MM/yyyy').format(date);
+                    
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                      child: ListTile(
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(note.title!, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                            Text(time, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                        subtitle: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                note.body!,
+                                style: TextStyle(fontSize: 15),
+                                maxLines: 5, 
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                actions: <Widget>[
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 10.0), 
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            IconButton(
+                                              icon: Icon(Icons.star),
+                                              tooltip: 'Star',
+                                              onPressed: () {
+                                                  // Implement the functionality for the Star button
+                                              },
+                                            ),
+                                            Text('Star'),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 10.0), 
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            IconButton(
+                                              icon: Icon(Icons.edit),
+                                              tooltip: 'Edit',
+                                              onPressed: () {
+                                                _showEditNotePopup(context, note.nid!, note);
+                                              },
+                                            ),
+                                            Text('Edit'),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 10.0), 
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            IconButton(
+                                              icon: Icon(Icons.delete),
+                                              tooltip: 'Delete',
+                                              onPressed: () {
+                                                noteController.deleteNote(noteId: note.nid!);
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                            Text('Delete'),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      ),
                     );
-                 },
+                  },
                 );
               },
             );
@@ -113,14 +176,15 @@ class Notes extends StatelessWidget {
             children: [
               TextFormField(
                 initialValue: noteTitle,
-                decoration: const InputDecoration(labelText: 'Title'),
+                decoration: const InputDecoration(labelText: 'Title: '),
                 onChanged: (value) {
                   noteTitle = value;
                 },
               ),
               TextFormField(
                 initialValue: noteBody,
-                decoration: const InputDecoration(labelText: 'Body'),
+                decoration: const InputDecoration(labelText: 'Note: '),
+                maxLines: 5,
                 onChanged: (value) {
                   noteBody = value;
                 },
@@ -164,13 +228,14 @@ class Notes extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Title'),
+                decoration: const InputDecoration(labelText: 'Title: '),
                 onChanged: (value) {
                  noteTitle = value;
                 },
               ),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Body'),
+                decoration: const InputDecoration(labelText: 'Body: '),
+                maxLines: 5,
                 onChanged: (value) {
                  noteBody = value;
                 },
@@ -180,21 +245,21 @@ class Notes extends StatelessWidget {
           actions: [
             ElevatedButton(
               onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
                 final newNote = NoteM(title: noteTitle, body: noteBody, date: noteDate);
                 noteController.addNote(newNote);
                 Navigator.pop(context);
               },
               child: const Text('Add'),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancel'),
-            ),
           ],
         );
       },
     );
- }
+  }
 }

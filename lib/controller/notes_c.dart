@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:umate/model/note_model.dart';
 import 'package:umate/fireDB_connect.dart';
 
@@ -7,13 +6,13 @@ class NoteController {
  final fDB = FireDBInstance.instance;
  final FirebaseAuth _auth = FirebaseAuth.instance;
 
- Future<void> addNote(NoteM note) async {
+  Future<void> addNote(NoteM note) async {
     final user = _auth.currentUser;
     if (user != null) {
       await fDB.collection('notes').doc(user.email).collection('userNotes').add(note.toJson());
       upNoteId();
     }
- }  
+  }  
 
   Future<void> upNoteId() async {
     final user = _auth.currentUser;
@@ -53,12 +52,23 @@ class NoteController {
       return Stream.value([]);
     }
   }
+
+  // Future<void> starStatus({required String noteId, required bool isStarred}) async {
+  //   final user = _auth.currentUser;
+  //   if (user != null) {
+  //     await fDB.collection('notes').doc(user.email).collection('userNotes').doc(note.nid).update({
+  //       'star': note.star == 'yes' ? 'no' : 'yes',
+  //     });
+  //   }
+  // }
+
   Future<void> updateNote(String noteId, NoteM updatedNote) async {
     final user = _auth.currentUser;
     if (user != null) {
       await fDB.collection('notes').doc(user.email).collection('userNotes').doc(noteId).update(updatedNote.toJson());
     }
   }
+
   Future<void> deleteNote({required String noteId}) async {
     final user = _auth.currentUser;
     if (user != null) {
