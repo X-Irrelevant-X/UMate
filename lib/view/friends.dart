@@ -64,7 +64,7 @@ class _FriendsState extends State<Friends> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ChatPage(friendName: friend['username'] ?? '')),
+                      MaterialPageRoute(builder: (context) => ChatPage(friendName: friend['username'] ?? '',friendEmail: friend['email'] ?? '',)),
                     );
                   },
                   trailing: IconButton(
