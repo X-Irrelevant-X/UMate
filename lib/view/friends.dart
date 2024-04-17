@@ -53,7 +53,6 @@ class _FriendsState extends State<Friends> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             final friends = snapshot.data!;
-            print(friends);
             return ListView.builder(
               itemCount: friends.length,
               itemBuilder: (context, index) {

@@ -88,4 +88,27 @@ class ChatController {
     }
   }
 
+  Future<void> deleteMessages(String friendEmail, String message) async {
+    final user = _auth.currentUser;
+    if (user != null) {
+        final userRef = fDB.collection('users').doc(user.email).collection('chats').doc(friendEmail).collection('messages');
+        final friendRef = fDB.collection('users').doc(friendEmail).collection('chats').doc(user.email).collection('messages');
+
+        await fDB.runTransaction((transaction) async {
+          final userSnapshot = await userRef.where('message', isEqualTo: message).get();
+          final friendSnapshot = await friendRef.where('message', isEqualTo: message).get();
+
+          for (var doc in userSnapshot.docs) {
+            transaction.delete(doc.reference);
+          }
+          
+          for (var doc in friendSnapshot.docs) {
+            transaction.delete(doc.reference);
+          }
+        });
+    } else {
+        throw Exception('User not found');
+    }
+    }
+
 }

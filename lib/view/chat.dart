@@ -5,7 +5,7 @@ import 'package:umate/model/message.dart';
 
 class ChatPage extends StatefulWidget {
  final String friendName;
- final String friendEmail; // Assuming you have the friend's email to identify the chat
+ final String friendEmail;
 
  const ChatPage({super.key, required this.friendName, required this.friendEmail});
 
@@ -14,34 +14,39 @@ class ChatPage extends StatefulWidget {
 }
 
 class ChatPageState extends State<ChatPage> {
-  final ChatController _chatController = ChatController();
-  List<Message> _messages = [];
-  final TextEditingController _messageController = TextEditingController();
+ final ChatController _chatController = ChatController();
+ List<Message> _messages = [];
+ final TextEditingController _messageController = TextEditingController();
 
-  @override
-  void initState() {
+ @override
+ void initState() {
       super.initState();
       _fetchMessages();
-  }
+ }
 
-  Future<void> _fetchMessages() async {
+ Future<void> _fetchMessages() async {
       final messages = await _chatController.getMessages(widget.friendEmail);
       setState(() {
         _messages = messages;
       });
-  }
+ }
 
-  Future<void> _sendMessage() async {
+ Future<void> _sendMessage() async {
       final message = _messageController.text;
       if (message.isNotEmpty) {
         await _chatController.addMessage(widget.friendEmail, message);
         _messageController.clear();
         _fetchMessages();
       }
-  }
+ }
 
-  @override
-  Widget build(BuildContext context) {
+ Future<void> _deleteMessage(String message) async {
+    await _chatController.deleteMessages(widget.friendEmail, message);
+    _fetchMessages(); // Refresh messages after deletion
+ }
+
+ @override
+ Widget build(BuildContext context) {
       return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -55,7 +60,7 @@ class ChatPageState extends State<ChatPage> {
               return IconButton(
                 icon: const Icon(Icons.menu),
                 onPressed: () {
-                  Scaffold.of(context).openDrawer();
+                 Scaffold.of(context).openDrawer();
                 },
               );
             },
@@ -73,7 +78,7 @@ class ChatPageState extends State<ChatPage> {
                       return Text('Error: ${snapshot.error}');
                     }
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
+                      return const CircularProgressIndicator();
                     }
                     final messages = snapshot.data ?? [];
                     return ListView.builder(
@@ -90,25 +95,35 @@ class ChatPageState extends State<ChatPage> {
           ],
         ),
       );
-  }
+ }
 
   Widget _buildChatMessage({required Message message}) {
     final isMe = message.senderEmail == _chatController.currentUserEmail;
     return Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-        child: Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: isMe ? Colors.blue : Colors.grey[200],
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Text(message.message!),
+        child: Row(
+          mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+          children: [
+            if (isMe)
+              IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () => _deleteMessage(message.message!),
+            ),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: isMe ? Colors.blue : Colors.grey[200],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(message.message!),
+            ),
+          ],
         ),
-      );
-  }
+    );
+    }
 
-  Widget _buildInputField() {
+ Widget _buildInputField() {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
@@ -128,8 +143,8 @@ class ChatPageState extends State<ChatPage> {
               child: TextField(
                 controller: _messageController,
                 decoration: const InputDecoration(
-                  hintText: "Type a message",
-                  border: InputBorder.none,
+                 hintText: "Type a message",
+                 border: InputBorder.none,
                 ),
               ),
             ),
@@ -140,5 +155,5 @@ class ChatPageState extends State<ChatPage> {
           ],
         ),
       );
-  }
+ }
 }

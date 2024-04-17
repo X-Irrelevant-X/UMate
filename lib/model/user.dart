@@ -1,7 +1,4 @@
 import 'dart:io';
-//import 'package:umate/fireDB_connect.dart';
-//final fDB = FireDBInstance.instance;
-
 
 class UserT {
   String email;
