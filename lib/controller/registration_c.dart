@@ -22,15 +22,15 @@ class RegistrationController {
         'uid': credential.user!.uid,
         'username': user.username,
         'email': credential.user!.email,
+        'name': '',
+        'gender': 'Male',
+        'avatarurl': '',
       });
 
       final userRecord = FirebaseAuth.instance.currentUser;
       print('Current User: $userRecord');
 
-      // final record = await pb.collection('users').create(body: user.toJson());
-      // print(record);
-      // await pb.collection('users').requestVerification(user.email);
-
+  
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),

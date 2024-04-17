@@ -1,111 +1,113 @@
 import 'package:flutter/material.dart';
-import 'package:umate/view/sidebar.dart';
+import 'package:umate/controller/friends_c.dart';
 import 'package:umate/view/chat.dart';
+import 'package:umate/view/sidebar.dart';
 
-class Friends extends StatelessWidget {
-  const Friends({super.key});
+class Friends extends StatefulWidget {
+ const Friends({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            "Friends",
-            style: TextStyle(fontSize: 30),
-          ),
-          centerTitle: true,
-          backgroundColor: const Color.fromARGB(255, 185, 205, 205),
-          leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-              );
-            },
-          ), 
+ @override
+ _FriendsState createState() => _FriendsState();
+}
+
+class _FriendsState extends State<Friends> {
+ final FriendsController friendsController = FriendsController();
+
+ @override
+ Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Chats',
+          style: TextStyle(fontSize: 30),
         ),
-        drawer: const SideBar(),
-        body: Row(
-          children: [
-            // Right column with top margin
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 0), 
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.1585,
-                      child: GestureDetector(
-                        onTap: () {
-                          _showAddFriendPopup(context);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          margin: const EdgeInsets.only(bottom: 5), 
-                          decoration: const BoxDecoration(
-                            border: Border(
-                              top: BorderSide(color: Color.fromARGB(255, 113, 113, 113), width: 1),
-                              bottom: BorderSide(color: Colors.black, width: 1),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.person_add),
-                              SizedBox(width: 15),
-                              Text(
-                                'Add Friend',
-                                style: TextStyle(fontSize: 35),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              _showAddFriendPopup(context);
+            },
+          ),
+        ],
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 185, 205, 205),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ), 
+      ),
+      drawer: const SideBar(),
+
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: friendsController.fetchFriends(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            final friends = snapshot.data!;
+            print(friends);
+            return ListView.builder(
+              itemCount: friends.length,
+              itemBuilder: (context, index) {
+                final friend = friends[index];
+                return ListTile(
+                  title: Text(friend['username'] ?? ''),
+                  subtitle: Text(friend['email'] ?? ''),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ChatPage(friendName: friend['username'] ?? '')),
+                    );
+                  },
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Delete Friend'),
+                            content: Text('Are you sure you want to remove this friend?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(); 
+                                  friendsController.deleteFriend(friend['email'] ?? '').then((_) {
+                                    setState(() {}); // Update the UI
+                                  });
+                                },
+                                child: Text('Yes'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('No'),
                               ),
                             ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: List.generate(
-                            20,
-                            (index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => ChatPage(friendName: 'Friend ${index + 1}')),
-                                  );
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.all(10),
-                                  margin: const EdgeInsets.symmetric(vertical: 5),
-                                  decoration: const BoxDecoration(
-                                    border: Border(bottom: BorderSide(color: Color.fromARGB(255, 92, 92, 92), width: 1)),
-                                  ),
-                                  child: Text(
-                                    'Friend ${index + 1}',
-                                    style: const TextStyle(fontSize: 25), // Increased font size
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                );
+              },
+            );
+          }
+        },
       ),
     );
-  }
+ }
 
-  void _showAddFriendPopup(BuildContext context) {
+ void _showAddFriendPopup(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -118,16 +120,16 @@ class Friends extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Name'),
+                decoration: const InputDecoration(labelText: 'Username: '),
                 onChanged: (value) {
-                  friendName = value;
+                 friendName = value;
                 },
               ),
               const SizedBox(height: 10),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Email'),
+                decoration: const InputDecoration(labelText: 'Email: '),
                 onChanged: (value) {
-                  friendEmail = value;
+                 friendEmail = value;
                 },
               ),
             ],
@@ -135,9 +137,12 @@ class Friends extends StatelessWidget {
           actions: [
             ElevatedButton(
               onPressed: () {
-                // Implement add friend functionality
-                // Add the friend with friendName and friendEmail
-                Navigator.pop(context);
+                friendsController.addFriend(friendName, friendEmail).then((_) {
+                 Navigator.pop(context); 
+                 setState(() {});
+                }).catchError((error) {
+                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error adding friend: $error')));
+                });
               },
               child: const Text('Add'),
             ),
@@ -151,5 +156,5 @@ class Friends extends StatelessWidget {
         );
       },
     );
-  }
+ }
 }
