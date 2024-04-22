@@ -109,6 +109,6 @@ class ChatController {
     } else {
         throw Exception('User not found');
     }
-    }
+  }
 
 }

@@ -61,7 +61,7 @@ class HomePageState extends State<HomePage> {
                   final starredNotes = snapshot.data!;
                   
                   if (starredNotes.isEmpty) {
-                    return Text('No starred notes found.');
+                    return Text('No Marked Notes found.');
                   } else {
                     return ListView.builder(
                       shrinkWrap: true,

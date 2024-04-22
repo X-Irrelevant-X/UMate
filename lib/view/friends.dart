@@ -49,45 +49,79 @@ class _FriendsState extends State<Friends> {
               itemCount: friends.length,
               itemBuilder: (context, index) {
                 final friend = friends[index];
-                return ListTile(
-                  title: Text(friend['username'] ?? ''),
-                  subtitle: Text(friend['email'] ?? ''),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ChatPage(friendName: friend['username'] ?? '',friendEmail: friend['email'] ?? '',)),
-                    );
-                  },
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('Delete Friend'),
-                            content: Text('Are you sure you want to remove this friend?'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(); 
-                                  friendsController.deleteFriend(friend['email'] ?? '').then((_) {
-                                    setState(() {});
-                                  });
-                                },
-                                child: Text('Yes'),
+                return Container(
+                  margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  height: 80, 
+                  child: ListTile(
+                      leading: friend['avatarurl'] != null
+                        ? CircleAvatar(
+                            radius: 50,
+                            backgroundColor: Colors.grey,
+                            child: ClipOval(
+                              child: Image.network(
+                                friend['avatarurl'],
+                                width: 50,
+                                height: 100,
+                                fit: BoxFit.cover,
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('No'),
-                              ),
-                            ],
+                            ),
+                          )
+                        : CircleAvatar(
+                            radius: 50, 
+                            child: Icon(Icons.person),
+                          ),
+                      
+                      title: Text(
+                        friend['username'] ?? '',
+                        style: TextStyle(fontSize: 22),
+                        textAlign: TextAlign.center, 
+                      ),
+                      subtitle: Text(
+                        friend['email'] ?? '',
+                        style: TextStyle(fontSize: 16),
+                        textAlign: TextAlign.center,
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ChatPage(friend: friend),)
+                        );
+                      },
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Delete Friend'),
+                                content: Text('Are you sure you want to remove this friend?'),
+                                actions: [
+                                  TextButton(
+                                  onPressed: () {
+                                      Navigator.of(context).pop(); 
+                                      friendsController.deleteFriend(friend['email'] ?? '').then((_) {
+                                        setState(() {});
+                                      });
+                                  },
+                                  child: Text('Yes'),
+                                  ),
+                                  TextButton(
+                                  onPressed: () {
+                                      Navigator.of(context).pop();
+                                  },
+                                  child: Text('No'),
+                                  ),
+                                ],
+                              );
+                            },
                           );
                         },
-                      );
-                    },
+                      ),
                   ),
                 );
               },

@@ -15,13 +15,22 @@ class FriendsController {
         final currentUser = UserT.fromJson(userData);
         final friendSnapshot = await fDB.collection('users').doc(friendEmail).get();
         if (friendSnapshot.exists) {
+          final friendData = friendSnapshot.data() as Map<String, dynamic>;
+          final friendUser = UserT.fromJson(friendData);
+
           await fDB.collection('users').doc(friendEmail).collection('friends').doc(user.email).set({
-            'username': friendUsername,
+            'avatarurl':friendUser.avatarurl,
             'email': friendEmail,
+            'gender': friendUser.gender,
+            'name': friendUser.name,
+            'username': friendUsername,
           });
           await fDB.collection('users').doc(user.email).collection('friends').doc(friendEmail).set({
-            'username': currentUser.username ?? '',
+            'avatarurl':currentUser.avatarurl,
             'email': user.email ?? '',
+            'gender': currentUser.gender,
+            'name': currentUser.name,
+            'username': currentUser.username,
           });
         } else {
           throw Exception('Friend not found');
@@ -43,8 +52,11 @@ class FriendsController {
         final friendData = friendSnapshot.data();
         if (friendData != null) {
           friendsData.add({
-            'username': friendData['username'],
+            'avatarurl': friendData['avatarurl'],
             'email': friendData['email'],
+            'gender': friendData['gender'],
+            'name': friendData['name'],
+            'username': friendData['username'],
           });
         }
       }
