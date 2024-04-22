@@ -98,7 +98,7 @@ class SideBar extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.chat),
-            title: Text('Friends'),
+            title: Text('Chats'),
             onTap: () {
               SidebarController().navigateToPage(context, Friends());
             },

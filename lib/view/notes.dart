@@ -5,12 +5,12 @@ import 'package:umate/controller/notes_c.dart';
 import 'package:umate/model/note_model.dart';
 
 class Notes extends StatelessWidget {
- final NoteController noteController;
+  final NoteController noteController;
 
- Notes({required this.noteController});
+  Notes({required this.noteController});
 
- @override
- Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(

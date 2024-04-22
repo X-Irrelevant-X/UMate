@@ -1,58 +1,66 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
 import 'package:umate/view/sidebar.dart';
 import 'package:umate/controller/chat_c.dart';
 import 'package:umate/model/message.dart';
 
 class ChatPage extends StatefulWidget {
- final String friendName;
- final String friendEmail;
+  final String friendName;
+  final String friendEmail;
 
- const ChatPage({super.key, required this.friendName, required this.friendEmail});
+  const ChatPage({super.key, required this.friendName, required this.friendEmail});
 
- @override
- ChatPageState createState() => ChatPageState();
+  @override
+  ChatPageState createState() => ChatPageState();
 }
 
 class ChatPageState extends State<ChatPage> {
- final ChatController _chatController = ChatController();
- List<Message> _messages = [];
- final TextEditingController _messageController = TextEditingController();
+  final ChatController _chatController = ChatController();
+  List<Message> _messages = [];
+  final TextEditingController _messageController = TextEditingController();
 
- @override
- void initState() {
-      super.initState();
-      _fetchMessages();
- }
+  @override
+  void initState() {
+        super.initState();
+        _fetchMessages();
+  }
 
- Future<void> _fetchMessages() async {
+  Future<void> _fetchMessages() async {
       final messages = await _chatController.getMessages(widget.friendEmail);
       setState(() {
         _messages = messages;
       });
- }
+  }
 
- Future<void> _sendMessage() async {
+  Future<void> _sendMessage() async {
       final message = _messageController.text;
       if (message.isNotEmpty) {
         await _chatController.addMessage(widget.friendEmail, message);
         _messageController.clear();
-        _fetchMessages();
       }
- }
+  }
 
- Future<void> _deleteMessage(String message) async {
+  Future<void> _deleteMessage(String message) async {
     await _chatController.deleteMessages(widget.friendEmail, message);
-    _fetchMessages(); // Refresh messages after deletion
- }
+  }
 
- @override
- Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
       return Scaffold(
         appBar: AppBar(
           title: Text(
             widget.friendName,
             style: const TextStyle(fontSize: 30),
           ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.info_outline),
+              onPressed: () {
+
+              },
+            ),
+          ],
           centerTitle: true,
           backgroundColor: const Color.fromARGB(255, 185, 205, 205),
           leading: Builder(
@@ -95,7 +103,7 @@ class ChatPageState extends State<ChatPage> {
           ],
         ),
       );
- }
+  }
 
   Widget _buildChatMessage({required Message message}) {
     final isMe = message.senderEmail == _chatController.currentUserEmail;
@@ -108,8 +116,33 @@ class ChatPageState extends State<ChatPage> {
             if (isMe)
               IconButton(
                 icon: const Icon(Icons.delete),
-                onPressed: () => _deleteMessage(message.message!),
-            ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Delete Message'),
+                        content: Text('Are you sure you want to delete this message?'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('No'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              _deleteMessage(message.message!);
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Yes'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(

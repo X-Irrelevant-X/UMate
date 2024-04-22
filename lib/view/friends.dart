@@ -21,14 +21,6 @@ class _FriendsState extends State<Friends> {
           'Chats',
           style: TextStyle(fontSize: 30),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              _showAddFriendPopup(context);
-            },
-          ),
-        ],
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 185, 205, 205),
         leading: Builder(
@@ -80,7 +72,7 @@ class _FriendsState extends State<Friends> {
                                 onPressed: () {
                                   Navigator.of(context).pop(); 
                                   friendsController.deleteFriend(friend['email'] ?? '').then((_) {
-                                    setState(() {}); // Update the UI
+                                    setState(() {});
                                   });
                                 },
                                 child: Text('Yes'),
@@ -102,6 +94,13 @@ class _FriendsState extends State<Friends> {
             );
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _showAddFriendPopup(context);
+        },
+        child: Icon(Icons.add),
+        backgroundColor: const Color.fromARGB(255, 185, 205, 205),
       ),
     );
  }
