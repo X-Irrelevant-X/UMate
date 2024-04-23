@@ -110,57 +110,6 @@ class ChatPageState extends State<ChatPage> {
       );
   }
 
-  // Widget _buildChatMessage({required Message message}) {
-  //   final isMe = message.senderEmail == _chatController.currentUserEmail;
-  //   return Container(
-  //       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-  //       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-  //       child: Row(
-  //         mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
-  //         children: [
-  //           if (isMe)
-  //             IconButton(
-  //               icon: const Icon(Icons.delete),
-  //               onPressed: () {
-  //                 showDialog(
-  //                   context: context,
-  //                   builder: (BuildContext context) {
-  //                     return AlertDialog(
-  //                       title: Text('Delete Message'),
-  //                       content: Text('Are you sure you want to delete this message?'),
-  //                       actions: <Widget>[
-  //                         TextButton(
-  //                           onPressed: () {
-  //                             Navigator.of(context).pop();
-  //                           },
-  //                           child: Text('No'),
-  //                         ),
-  //                         TextButton(
-  //                           onPressed: () {
-  //                             _deleteMessage(message.message!);
-  //                             Navigator.of(context).pop();
-  //                           },
-  //                           child: Text('Yes'),
-  //                         ),
-  //                       ],
-  //                     );
-  //                   },
-  //                 );
-  //               },
-  //             ),
-  //           Container(
-  //             padding: const EdgeInsets.all(12),
-  //             decoration: BoxDecoration(
-  //               color: isMe ? Colors.blue : Colors.grey[200],
-  //               borderRadius: BorderRadius.circular(12),
-  //             ),
-  //             child: Text(message.message!),
-  //           ),
-  //         ],
-  //       ),
-  //   );
-  // }
-
   Widget _buildChatMessage({required Message message}) {
     final isMe = message.senderEmail == _chatController.currentUserEmail;
     return ChatMessageWidget(
@@ -171,11 +120,10 @@ class ChatPageState extends State<ChatPage> {
         },
     );
   }
-  
 
- Widget _buildInputField() {
+  Widget _buildInputField() {
       return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -189,15 +137,24 @@ class ChatPageState extends State<ChatPage> {
         ),
         child: Row(
           children: [
+            SizedBox(width: 10),
             Expanded(
-              child: TextField(
-                controller: _messageController,
-                decoration: const InputDecoration(
-                 hintText: "Type a message",
-                 border: InputBorder.none,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.grey),
+                ),
+                child: TextField(
+                  controller: _messageController,
+                  decoration: InputDecoration(
+                    hintText: "Type a message",
+                    contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    border: InputBorder.none,
+                  ),
                 ),
               ),
             ),
+            SizedBox(width: 10),
             IconButton(
               icon: const Icon(Icons.send),
               onPressed: _sendMessage,

@@ -11,7 +11,7 @@ dependencies:
     sdk: flutter
   mvc_pattern: ^8.12.0
   image_picker: any
-  webview_flutter: any
+  url_launcher: any
   firebase_core: ^2.29.0
   firebase_auth: ^4.19.1
   cloud_firestore: ^4.16.1
