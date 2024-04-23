@@ -24,7 +24,7 @@ class HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text(
           'UMate',
-          style: TextStyle(fontSize: 30),
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 185, 205, 205),

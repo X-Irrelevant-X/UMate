@@ -112,7 +112,7 @@ class SideBar extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.link_rounded),
-            title: Text('Social Links'),
+            title: Text('Quick Links'),
             onTap: () {
               SidebarController().navigateToPage(context, SocialLinks());
             },

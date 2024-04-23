@@ -55,7 +55,7 @@ class ChatPageState extends State<ChatPage> {
         appBar: AppBar(
           title: Text(
             widget.friend['username'],
-            style: const TextStyle(fontSize: 30),
+            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           actions: [
             IconButton(

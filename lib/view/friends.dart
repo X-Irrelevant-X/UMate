@@ -19,7 +19,7 @@ class _FriendsState extends State<Friends> {
       appBar: AppBar(
         title: const Text(
           'Chats',
-          style: TextStyle(fontSize: 30),
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 185, 205, 205),
