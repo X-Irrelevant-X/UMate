@@ -154,10 +154,10 @@ class ExternalResourceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final partsUri = Uri.parse(resourceUrl);
-    final hostParts = partsUri.host?.split('.');
+    final hostParts = partsUri.host.split('.');
 
     String host = '';
-    if (hostParts != null) {
+    if (hostParts.isNotEmpty) {
       if (hostParts.length == 2) {
         host = hostParts.first[0].toUpperCase() + hostParts.first.substring(1).toLowerCase();
       } else if (hostParts.length == 3) {

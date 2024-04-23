@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:umate/view/sidebar.dart';
 
-class AdvisingPlanning extends StatelessWidget {
-  const AdvisingPlanning({Key? key}) : super(key: key);
+
+class SchedulePlanning extends StatelessWidget {
+  const SchedulePlanning({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +11,7 @@ class AdvisingPlanning extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           title: const Text(
-            "Advising Planning",
+            "Schedule Planning",
             style: TextStyle(fontSize: 30),
           ),
           centerTitle: true,
@@ -138,7 +139,7 @@ class AdvisingPlanning extends StatelessWidget {
 
   void _addCourse(BuildContext context, String course) {
     // Implement adding the course
-    Navigator.pop(context); // Close the Add Course popup
+    Navigator.pop(context); 
   }
 
   void _showDayPlan(BuildContext context, int day) {
@@ -167,7 +168,4 @@ class AdvisingPlanning extends StatelessWidget {
   }
 }
 
-void main() {
-  runApp(const AdvisingPlanning());
-}
 

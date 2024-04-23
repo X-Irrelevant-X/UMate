@@ -91,10 +91,10 @@ class ProfileState extends State<ProfilePage> {
                       backgroundImage: _image != null
                         ? FileImage(_image!) as ImageProvider<Object>?
                         : widget.user.avatarurl != null
-                            ? NetworkImage(widget.user.avatarurl!) as ImageProvider<Object>? // Load image from URL
+                            ? NetworkImage(widget.user.avatarurl!) as ImageProvider<Object>?
                             : null,
 
-                      child: _image == null && widget.user.avatarurl == null
+                      child: ((_image == null && widget.user.avatarurl == null) || widget.user.avatarurl!.isEmpty)
                           ? const Icon(Icons.add_a_photo, size: 40)
                           : null,
                     ),

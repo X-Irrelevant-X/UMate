@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:umate/controller/sidebar_c.dart';
 import 'package:umate/model/user.dart';
-import 'package:umate/view/advising.dart';
+import 'package:umate/view/schedule.dart';
 import 'package:umate/view/friends.dart';
+import 'package:umate/view/memes.dart';
 import 'package:umate/view/notes.dart';
 import 'package:umate/view/home.dart';
 import 'package:umate/view/social_links.dart';
@@ -30,7 +31,7 @@ class SideBar extends StatelessWidget {
                       color: Colors.white,
                       fontSize: 35,
                     ),
-                 ),
+                ),
                 );
               } else if (snapshot.hasError) {
                 return const DrawerHeader(
@@ -63,8 +64,9 @@ class SideBar extends StatelessWidget {
                             CircleAvatar(
                               radius: 30,
                               backgroundImage: user.avatarurl != null
-                                  ? NetworkImage(user.avatarurl!) as ImageProvider<Object>?
+                                  ? NetworkImage(user.avatarurl!)
                                   : null,
+                              child: user.avatarurl == null ? Icon(Icons.person) : null,
                             ),
                             SizedBox(width: 10),
                             Text(
@@ -119,14 +121,20 @@ class SideBar extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.calendar_today),
-            title: Text('Advising Planning'),
+            title: Text('Schedule Planning'),
             onTap: () {
-              SidebarController().navigateToPage(context, AdvisingPlanning());
+              SidebarController().navigateToPage(context, SchedulePlanning());
             },
           ),
-          const SizedBox(height: 10),
+          ListTile(
+            leading: Icon(Icons.emoji_emotions),
+            title: Text('Memes/Motivation'),
+            onTap: () {
+              SidebarController().navigateToPage(context, MemesScreen());
+            },
+          ),
+          const SizedBox(height: 30),
           const Divider(),
-          const SizedBox(height: 10),
           ListTile(
             leading: Icon(Icons.logout),
             title: Text('Logout'),
@@ -134,6 +142,8 @@ class SideBar extends StatelessWidget {
               LoginController().logout(context);
             },
           ),
+          const Divider(),
+          const SizedBox(height: 10),
         ],
       ),
     );
