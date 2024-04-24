@@ -1,6 +1,8 @@
+// ignore_for_file: unused_import
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:umate/view/sidebar.dart';
 import 'package:umate/model/schedule_model.dart';
 import 'package:umate/controller/schedule_c.dart';
@@ -77,6 +79,7 @@ class SchedulePlanningState extends State<SchedulePlanning> {
                     
                     return SizedBox(
                       height: 120, 
+                      width: MediaQuery.of(context).size.width * 0.9,
                       child: Card(
                         margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
                         child: ListTile(
@@ -87,12 +90,12 @@ class SchedulePlanningState extends State<SchedulePlanning> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(schedule.day!, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                                  Text(schedule.day!, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                                   SizedBox(height: 20),
                                 ],
                               ),
 
-                              SizedBox(width: 20),
+                              SizedBox(width: 10),
                               
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
