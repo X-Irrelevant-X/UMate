@@ -5,7 +5,7 @@ import 'dart:math';
 class FetchMeme {
   static final List<String> subredList = [
     'ProgrammerHumor',
-    'wholesomememes', 
+    'educationalmemes',
     'mathmemes',
     'StoicMemes',
     'engineeringmemes',
