@@ -82,7 +82,7 @@ class _FriendsState extends State<Friends> {
                       ),
                       subtitle: Text(
                         friend['email'] ?? '',
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(fontSize: 10),
                         textAlign: TextAlign.center,
                       ),
                       onTap: () {
