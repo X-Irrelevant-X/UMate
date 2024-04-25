@@ -191,31 +191,40 @@ class SchedulePlanningState extends State<SchedulePlanning> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Title: '),
+                decoration: const InputDecoration(labelText: 'Task: '),
                 onChanged: (value) {
                  title = value;
                 },
               ),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Room: '),
+                decoration: const InputDecoration(labelText: 'Place: '),
                 onChanged: (value) {
                  room = value;
                 },
               ),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'From: '),
+                decoration: const InputDecoration(
+                  labelText: 'From: ',
+                  hintText: '12.00',
+                ),
                 onChanged: (value) {
                  from = value;
                 },
               ),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'To: '),
+                decoration: const InputDecoration(
+                  labelText: 'To: ',
+                  hintText: '2.00',
+                ),
                 onChanged: (value) {
                  to = value;
                 },
               ),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Day: '),
+                decoration: const InputDecoration(
+                  labelText: 'Day: ',
+                  hintText: 'Friday',
+                ),
                 onChanged: (value) {
                  day = value;
                 },
@@ -231,15 +240,33 @@ class SchedulePlanningState extends State<SchedulePlanning> {
             ),
             ElevatedButton(
               onPressed: () {
-                final newSchedule = ScheduleM(
-                  title: title,
-                  room: room,
-                  from: from,
-                  to: to,
-                  day: day
-                );
-                scheduleControl.addSchdeule(newSchedule);
-                Navigator.pop(context);
+                List<String> validDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+                double? fromValue = double.tryParse(from);
+                double? toValue = double.tryParse(to);
+
+                if (title.isEmpty) {
+                  showErrorPopup(context, 'Title is missing');
+                } else if (room.isEmpty) {
+                  showErrorPopup(context, 'Room is missing');
+                } else if (fromValue == null || fromValue < 1.0 || fromValue > 12.0) {
+                  showErrorPopup(context, 'From time should be between 1.00 and 12.00');
+                } else if (toValue == null || toValue < 1.0 || toValue > 12.0) {
+                  showErrorPopup(context, 'To time should be between 1.00 and 12.00');
+                } else if (!validDays.contains(day.toLowerCase())) {
+                  showErrorPopup(context, 'Day is incorrect');
+                } else {
+                  final newSchedule = ScheduleM(
+                    title: title,
+                    room: room,
+                    from: from,
+                    to: to,
+                    day: day
+                  );
+                  scheduleControl.addSchdule(newSchedule);
+                  Navigator.pop(context);
+                }
+
               },
               child: const Text('Save'),
             ),
@@ -248,4 +275,23 @@ class SchedulePlanningState extends State<SchedulePlanning> {
       },
     );
   }
+}
+
+
+void showErrorPopup(BuildContext context, String message) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Error'),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('OK', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      );
+    },
+  );
 }

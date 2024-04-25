@@ -134,7 +134,7 @@ class ProfileState extends State<ProfilePage> {
                                 .map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
-                                child: Center( // Center the text within the dropdown item
+                                child: Center(
                                   child: Text(value),
                                 ),
                               );

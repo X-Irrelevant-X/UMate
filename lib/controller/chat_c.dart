@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:umate/fireDB_connect.dart';
 import 'package:umate/model/user.dart';
 import 'package:umate/model/message.dart';
+import 'package:umate/model/schedule_model.dart';
 import 'dart:async';
 
 class ChatController {
@@ -85,6 +86,22 @@ class ChatController {
           .map((snapshot) => snapshot.docs.map((doc) => Message.fromMap(doc.data())).toList());
     } else {
       throw Exception('User not found');
+    }
+  }
+
+  Future<Stream<List<ScheduleM>>> getFriendSchedules(String friendEmail) async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final schedule = fDB
+          .collection('schedules')
+          .doc(friendEmail)
+          .collection('userSchedules')
+          .snapshots()
+          .map((snapshot) => snapshot.docs.map((doc) => ScheduleM.fromJson(doc.data(), doc.id)).toList());
+      
+      return schedule;
+    } else {
+      return Stream.value([]);
     }
   }
 

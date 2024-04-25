@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:umate/view/sidebar.dart';
 import 'package:umate/controller/chat_c.dart';
 import 'package:umate/model/message.dart';
+import 'package:umate/model/schedule_model.dart';
 import 'package:intl/intl.dart';
 
 
 class ChatPage extends StatefulWidget {
   final Map friend;
-  
 
   const ChatPage({super.key, required this.friend});
 
@@ -176,6 +176,22 @@ class ChatPageState extends State<ChatPage> {
     );
   }
 
+  void _showSchedulePopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.9,
+            ),
+            child: ScheduleTile(friendEmail: widget.friend['email']),
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildFriendProfile(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -203,6 +219,14 @@ class ChatPageState extends State<ChatPage> {
         buildProfileRow("Name:", '${widget.friend['name'] ?? ''}'),
         buildProfileRow("Gender:", '${widget.friend['gender'] ?? ''}'),
         
+        SizedBox(height: 20),
+        Center(
+          child: ElevatedButton(
+            onPressed: _showSchedulePopup,
+            child: Text('Schedule'),
+          ),
+        ),
+
         SizedBox(height: 50),
       ],
     );
@@ -317,7 +341,7 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 child: Text(
-                  formattedTimestamp, // Use the formatted timestamp here
+                  formattedTimestamp,
                   style: TextStyle(fontSize: 12, color: Colors.grey),
                 ),
               ),
@@ -327,3 +351,105 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> {
   }
 }
 
+class ScheduleTile extends StatelessWidget {
+  final ChatController chatCon = ChatController();
+  final friendEmail;
+
+  ScheduleTile({super.key, this.friendEmail});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Stream<List<ScheduleM>>>(
+      future: chatCon.getFriendSchedules(friendEmail),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          final currentWeekday = DateFormat('EEEE').format(DateTime.now());
+
+          return StreamBuilder<List<ScheduleM>>(
+            stream: snapshot.data,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              }
+
+              final schedules = snapshot.data!.where((schedule) => schedule.day == currentWeekday).toList();
+
+              if (schedules.isEmpty) {
+                return Text('No schedules for today.');
+              }
+
+              final sortedSchedules = schedules..sort((a, b) {
+                final timeA = DateTime.parse("1970-01-01T${a.from!.replaceAll('.', ':')}:00");
+                final timeB = DateTime.parse("1970-01-01T${b.from!.replaceAll('.', ':')}:00");
+
+                return timeA.compareTo(timeB);
+              });
+
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: sortedSchedules.length,
+                itemBuilder: (context, index) {
+                  final schedule = sortedSchedules[index];
+                  return SizedBox(
+                    height: 120,
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Card(
+                      margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                      child: ListTile(
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(schedule.day!, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                SizedBox(height: 20),
+                              ],
+                            ),
+
+                            SizedBox(width: 10),
+
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('Task: ${schedule.title!}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('Place: ${schedule.room!}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                    SizedBox(width: 10),
+                                    Text('Time: ${schedule.from!} - ${schedule.to!}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          );
+        }
+      },
+    );
+  }
+}

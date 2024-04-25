@@ -128,7 +128,7 @@ class SideBar extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.emoji_emotions),
-            title: Text('Memes/Motivation'),
+            title: Text('Memes'),
             onTap: () {
               SidebarController().navigateToPage(context, MemesScreen());
             },

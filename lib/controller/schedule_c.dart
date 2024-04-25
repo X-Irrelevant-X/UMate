@@ -6,7 +6,7 @@ class ScheduleController {
  final fDB = FireDBInstance.instance;
  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<void> addSchdeule(ScheduleM schedule) async {
+  Future<void> addSchdule(ScheduleM schedule) async {
     final user = _auth.currentUser;
     if (user != null) {
       await fDB.collection('schedules').doc(user.email).collection('userSchedules').add(schedule.toJson());
