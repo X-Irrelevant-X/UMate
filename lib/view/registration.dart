@@ -173,11 +173,11 @@ class RegistrationState extends State<Registration> {
                       }
                     },
                     style: ButtonStyle(
-                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                      padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
                         const EdgeInsets.symmetric(
                             vertical: 15.0, horizontal: 40.0),
                       ),
-                      backgroundColor: MaterialStateProperty.all<Color>(
+                      backgroundColor: WidgetStateProperty.all<Color>(
                         const Color.fromARGB(255, 220, 238, 238),
                       ),
                     ),

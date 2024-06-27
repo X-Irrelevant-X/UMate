@@ -39,6 +39,7 @@ class ProfileController {
     }
   }
 
+  
   Future<void> deleteAccount(String email) async {
     try {
       await FirebaseAuth.instance.currentUser?.delete();

@@ -110,18 +110,18 @@ class HomePageState extends State<HomePage> {
           content: const Text('Are you sure you want to unstar this note?'),
           actions: <Widget>[
             ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
               onPressed: () async {
                 await homeController.unStarNote(note);
                 Navigator.pop(context);
                 refreshNotes();
               },
               child: const Text('Unstar'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
             ),
           ],
         );

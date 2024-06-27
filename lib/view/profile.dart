@@ -234,6 +234,14 @@ class ProfileState extends State<ProfilePage> {
                               ),
                             );
                           }
+                          else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: const Text('Failed to update profile'),
+                                backgroundColor: Colors.red[300],
+                              ),
+                            );
+                          }
                         } catch (error) {
                           print('Failed to update profile: $error');
                         }

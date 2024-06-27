@@ -95,8 +95,9 @@ class Notes extends StatelessWidget {
                                             IconButton(
                                               icon: Icon(Icons.star),
                                               tooltip: 'Star',
-                                              onPressed: () {
-                                                NoteController().starNote(note);
+                                              onPressed: () async {
+                                                await NoteController().starNote(note);
+                                                Navigator.pop(context);
                                               },
                                             ),
                                             Text('Star'),
@@ -113,6 +114,7 @@ class Notes extends StatelessWidget {
                                               tooltip: 'Edit',
                                               onPressed: () {
                                                 _showEditNotePopup(context, note.nid!, note);
+                                                Navigator.pop(context);
                                               },
                                             ),
                                             Text('Edit'),
