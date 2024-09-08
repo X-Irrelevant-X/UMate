@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:umate/controller/sidebar_c.dart';
 import 'package:umate/model/user.dart';
 import 'package:umate/view/schedule.dart';
@@ -9,6 +10,7 @@ import 'package:umate/view/home.dart';
 import 'package:umate/view/social_links.dart';
 import 'package:umate/controller/login_c.dart';
 import 'package:umate/controller/notes_c.dart';
+import 'package:umate/model/theme.dart';
 
 class SideBar extends StatelessWidget {
   const SideBar({super.key});
@@ -144,6 +146,19 @@ class SideBar extends StatelessWidget {
           ),
           const Divider(),
           const SizedBox(height: 10),
+          Consumer<ThemeNotifier>(
+            builder: (context, themeNotifier, child) {
+              return ListTile(
+                leading: Icon(themeNotifier.isDarkMode
+                    ? Icons.dark_mode
+                    : Icons.light_mode),
+                title: Text(themeNotifier.isDarkMode ? 'Dark Mode' : 'Light Mode'),
+                onTap: () {
+                  themeNotifier.toggleTheme();
+                },
+              );
+            },
+          ),
         ],
       ),
     );

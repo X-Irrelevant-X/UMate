@@ -230,7 +230,7 @@ class ScheduleTile extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(schedule.day!, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                Text(schedule.day!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                                 SizedBox(height: 20),
                               ],
                             ),
@@ -244,16 +244,16 @@ class ScheduleTile extends StatelessWidget {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text('Task: ${schedule.title!}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                                    Text('Task: ${schedule.title!}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                                   ],
                                 ),
                                 SizedBox(height: 10),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text('Place: ${schedule.room!}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                    Text('Place: ${schedule.room!}', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                                     SizedBox(width: 10),
-                                    Text('Time: ${schedule.from!} - ${schedule.to!}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                    Text('Time: ${schedule.from!} - ${schedule.to!}', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                                   ],
                                 ),
                                 SizedBox(height: 20),
